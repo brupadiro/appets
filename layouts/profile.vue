@@ -27,16 +27,17 @@
     import BottomNavigationBar from '../components/BottomNavigationBar'
 
     export default {
+        middleware: "auth",
         data() {
             return {
                 drawer: false
             }
         },
         methods: {
-          logout(){
-            this.$auth.logout()
-            this.$router.push('/login')
-          }
+            logout() {
+                this.$auth.logout()
+                this.$router.push('/login')
+            }
         },
         components: {
             BottomNavigationBar

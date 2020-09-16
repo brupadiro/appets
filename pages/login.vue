@@ -14,43 +14,63 @@
       </v-col>
       <v-col class="col-12">
         <v-text-field outlined required label="Email" color="white" type="email" v-model="profile.email"></v-text-field>
-        <v-text-field outlined required label="Password" color="white" type="text" v-model="profile.password"></v-text-field>
+        <v-text-field 
+        outlined 
+        required 
+        label="Password" 
+        color="white" 
+        :type="show1 ? 'text' : 'password'"
+        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="show1 = !show1"
+        v-model="profile.password">
+      </v-text-field>
       </v-col>
       <v-col class="col-12 d-flex">
         <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="success"
           @click="loginUser()">INICIAR SESION</v-btn>
       </v-col>
     </v-row>
+    <v-snackbar
+      v-model="showSnackbar"
+      timeout="1000"
+      color="red"
+    >
+    Credenciales incorrectas
+    </v-snackbar>
   </v-container>
 </template>
 
 
 <script>
-  import axios from 'axios';
-  export default {
-    layout:'disconected',
-    data() {
-      return {
-        profile: {}
-      }
-    },
-    methods: {
-      async loginUser() {
-        this.loading = true
-        try {
-          await this.$auth.loginWith("local", {
-            data: {
-              identifier: this.profile.email,
-              password: this.profile.password
+    import axios from 'axios';
+    export default {
+        layout: 'disconected',
+        data() {
+            return {
+                profile: {},
+                show1: false,
+                showSnackbar: false
             }
-          });
-          return this.$router.push('/')
-        } catch (e) {}
-      }
+        },
+        methods: {
+            async loginUser() {
+                this.loading = true
+                try {
+                    await this.$auth.loginWith("local", {
+                        data: {
+                            identifier: this.profile.email,
+                            password: this.profile.password
+                        }
+                    })
+                    return this.$router.push('/')
+                } catch (e) {
+                    this.showSnackbar = true
+                }
+            }
+        }
     }
-  }
-
 </script>
 
 <style scoped>
+
 </style>

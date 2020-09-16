@@ -18,20 +18,20 @@
 </template>
 
 <script>
-  import BottomNavigationBar from "~/components/BottomNavigationBar.vue"
-  import createPost from "~/components/createPost.vue"
+    import BottomNavigationBar from "~/components/BottomNavigationBar.vue"
+    import createPost from "~/components/createPost.vue"
 
-  export default {
-    components: {
-      createPost,
-      BottomNavigationBar
-    },
-    data() {
-      return {
-        addPublication: false,
-      }
-    },
-    methods: {}
-  }
-
+    export default {
+        middleware: "auth",
+        components: {
+            createPost,
+            BottomNavigationBar
+        },
+        data() {
+            return {
+                addPublication: false,
+            }
+        },
+        methods: {}
+    }
 </script>

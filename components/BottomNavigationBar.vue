@@ -30,25 +30,24 @@
 </template>
 
 <script>
-  export default {
-    name: 'BottomNavigationBar',
-    data() {
-      return {
-        bottomNav: 'profile'
-      }
+    export default {
+        name: 'BottomNavigationBar',
+        data() {
+            return {
+                bottomNav: 'profile'
+            }
+        }
     }
-  }
-
 </script>
 
 <style>
-  .bottom-navigation {
-    margin: 12px;
-    width: calc(100% - 24px)!important;
-    border-radius:3px;
-  }
-  
-.p-absolute{
-  position:absolute;
-}
+    .bottom-navigation {
+        margin: 12px;
+        width: calc(100% - 24px)!important;
+        border-radius: 3px;
+    }
+    
+    .p-absolute {
+        position: absolute;
+    }
 </style>

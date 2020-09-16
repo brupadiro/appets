@@ -9,7 +9,7 @@
       @click="selectPhoto"
     >
     <v-icon size="80" v-if="image == null">mdi-camera-plus-outline</v-icon>
-    <v-img v-else :src="image" contain></v-img>
+    <v-img id="previewImg" v-else :src="image" max-height="100%" contain></v-img>
     <input type="file" style="display:none;" id="uploadFile" @change="onFileChange" accept="image/*">
     </v-sheet>
     </v-container>
@@ -18,11 +18,12 @@
 <script>
     export default {
         name: 'DragAndDropPhotoCard',
-        data() {
-            return {
-                image: null,
-            }
-        },
+        props: ['image'],
+        // data() {
+        //     return {
+        //         image: null,
+        //     }
+        // },
         methods: {
             selectPhoto(event) {
                 console.log("click")
@@ -32,9 +33,9 @@
                 var files = e.target.files || e.dataTransfer.files
                 if (!files.length)
                     return
-                this.$emit('uploadedPicture',files[0])
-                this.createImage(files[0]) 
-                
+                this.$emit('uploadedPicture', files[0])
+                this.createImage(files[0])
+
             },
             createImage(file) {
                 var image = new Image()
@@ -45,6 +46,7 @@
                     vm.image = e.target.result
                 };
                 reader.readAsDataURL(file)
+
             },
         }
     }

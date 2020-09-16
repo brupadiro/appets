@@ -20,65 +20,56 @@
           <input type="file" style="display:none;" id="uploadFile" @change="onFileChange" accept="image/*">
       </v-card-text>
       <v-divider></v-divider>
-      <!--
-      <v-card-actions class="d-flex justify-center">
-        <v-card dense class="elevation-5 rounded-pill" width="50%">
-          <v-card-text class="pa-2 pl-12 pr-12 d-flex justify-center">
-            <v-btn icon color="success" @click="selectPhoto()">
-              <v-icon>mdi-camera</v-icon>
-            </v-btn>
-          </v-card-text>
-        </v-card>
-      </v-card-actions>
-      -->
     </v-card>
   </v-dialog>
 </template>
 
 
 <script>
-  export default {
-    props: {
-      value: Boolean
-    },
-    data() {
-      return {
-        publicacion: {}
-      }
-    },
-    methods: {
-      selectPhoto() {
-        uploadFile.click()
-      },
-      onFileChange(e) {
-        var files = e.target.files || e.dataTransfer.files
-        if (!files.length)
-          return
-        this.publicacion.imagen_principal = files[0]
-        console.log(URL.createObjectURL(files[0]))
-        previewImg.src = URL.createObjectURL(files[0])
-        this.$forceUpdate()
-      },
-      createPublication() {
-        const data = new FormData()
-        data.append('data', JSON.stringify({
-          "contenido": this.publicacion.contenido,
-          'user': 1
-        }))
-        data.append('files.imagen_principal', this.publicacion.imagen_principal)
-        this.$axios.post('/publicaciones/', data, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
+    export default {
+        props: {
+            value: Boolean
+        },
+        data() {
+            return {
+                publicacion: {}
             }
-          })
-          .then(() => {
-            this.$root.$emit('newPublication')
-            this.$emit('input',false)
-          })
-      }
-    }
-  }
+        },
+        methods: {
+            selectPhoto() {
+                uploadFile.click()
+            },
+            onFileChange(e) {
+                var files = e.target.files || e.dataTransfer.files
+                if (!files.length)
+                    return
+                this.publicacion.imagen_principal = files[0]
+                console.log(URL.createObjectURL(files[0]))
+                previewImg.src = URL.createObjectURL(files[0])
+                previewImg.style = "max-height: 100%;max-width: 100%"
+                this.$forceUpdate()
 
+            },
+
+            createPublication() {
+                const data = new FormData()
+                data.append('data', JSON.stringify({
+                    "contenido": this.publicacion.contenido,
+                    'user': $nuxt.$auth.user.id
+                }))
+                data.append('files.imagen_principal', this.publicacion.imagen_principal)
+                this.$axios.post('/publicaciones/', data, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(() => {
+                        this.$root.$emit('newPublication')
+                        this.$emit('input', false)
+                    })
+            }
+        }
+    }
 </script>
 
 <style scoped>

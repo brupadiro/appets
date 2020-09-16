@@ -9,6 +9,7 @@
         <v-col class="col-4 text-center">
           <v-avatar color="teal" size="100">
             <v-img v-if="profile.profile_picture.url" :src="$axios.defaults.baseURL + profile.profile_picture.url"></v-img>
+            <v-icon v-else size="100">mdi-account-circle-outline</v-icon>
           </v-avatar>
         </v-col>
 
@@ -34,15 +35,15 @@
     <v-dialog fullscreen v-model="modalEditProfile" class="mb-6">
       <v-card>
         <v-card-title class="text-center">
-          <v-btn icon @click="modalEditProfile = false">
-            <v-icon>mdi-arrow-left</v-icon>
+          <v-btn icon>
+            <v-icon @click="modalEditProfile = false">mdi-arrow-left</v-icon>
           </v-btn>
           Tu perfil
         </v-card-title>
         <v-card-text>
         <v-row no-gutters>
             <v-col class="col-12">
-                <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)"></drag-and-drop-photo-card>
+                <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="$axios.defaults.baseURL + profile.profile_picture.url" ></drag-and-drop-photo-card>
             </v-col>
             <v-col class="col-12">
                 <v-text-field outlined required label="Nombre de usuario" type="text" v-model="profile.username"></v-text-field>
@@ -60,69 +61,85 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      v-model="showSnackbar"
+      timeout="1000"
+    >
+      Tu perfil a sido acutalizado
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
-  import PostCard from "~/components/PostCard.vue"
+    import PostCard from "~/components/PostCard.vue"
     import DragAndDropPhotoCard from '~/components/DragAndDropPhotoCard.vue'
 
-  export default {
-    layout: 'profile',
-    data() {
-      return {
-        tab: null,
-        publications: [],
-        modalEditProfile: false,
-        profile:{
-          profile_picture:{}
+    export default {
+        layout: 'profile',
+        data() {
+            return {
+                tab: null,
+                publications: [],
+                modalEditProfile: false,
+                profile: {
+                    profile_picture: {}
+                },
+                items: {
+                    info: {
+                        extra: "Extra extraaa"
+                    }
+                },
+                showSnackbar: false
+            }
         },
-        items: {
-          info: {
-            extra: "Extra extraaa"
-          }
+        created() {
+            this.getPosts()
+            this.getUser()
+        },
+        methods: {
+            setProfilePicture(e) {
+                this.profile.profile_picture = e
+            },
+            getUser() {
+                this.$axios.get(`/users/${this.$auth.user.id}/`)
+                    .then((data) => {
+                        this.profile = data.data
+                    })
+            },
+            saveProfile() {
+                let profileData = new FormData()
+                profileData.append(`data`, JSON.stringify(this.profile))
+                this.$axios.put(`/users/${this.$auth.user.id}/`, profileData)
+                    .then((data) => {
+                        let profilePicture = new FormData()
+                        profilePicture.append('field', 'profile_picture')
+                        profilePicture.append('files', this.profile.profile_picture)
+                        profilePicture.append('source', 'users-permissions');
+                        profilePicture.append('ref', 'user')
+                        profilePicture.append('refId', this.$auth.user.id)
+                        this.$axios.post('/upload', profilePicture, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        this.closeModalPerfil()
+                    })
+            },
+            getPosts() {
+                this.$axios.get(`/publicaciones/?user=${this.$auth.user.id}`)
+                    .then((data) => {
+                        this.publications = data.data
+                    })
+            },
+            closeModalPerfil() {
+                this.modalEditProfile = false
+                this.showSnackbar = true
+                this.getUser()
+            }
+        },
+        components: {
+            PostCard,
+            DragAndDropPhotoCard
         }
-      }
-    },
-    created() {
-      this.getPosts()
-      this.getUser()
-    },
-    methods: {
-      setProfilePicture(e){
-        this.profile.profile_picture = e
-      },
-      getUser() {
-        this.$axios.get(`/users/${this.$auth.user.id}/`)
-          .then((data)=>{
-            this.profile = data.data
-          })
-      },
-      saveProfile(){
-        let profileData = new FormData() 
-        profileData.append(`data`,JSON.stringify(this.profile))
-        this.$axios.put(`/users/${this.$auth.user.id}/`,profileData)
-          .then((data)=>{
-            let profilePicture = new FormData()
-            profilePicture.append('field','profile_picture')
-            profilePicture.append('files',this.profile.profile_picture)
-            profilePicture.append('source', 'users-permissions');
-            profilePicture.append('ref','user')
-            profilePicture.append('refId',this.$auth.user.id)
-            this.$axios.post('/upload',profilePicture,{headers: {'Content-Type': 'multipart/form-data' }})
-          })
-      },
-      getPosts() {
-        this.$axios.get(`/publicaciones/?user=1`)
-          .then((data) => {
-            this.publications = data.data
-          })
-      }
-    },
-    components: {
-      PostCard,
-      DragAndDropPhotoCard
     }
-  }
-
 </script>

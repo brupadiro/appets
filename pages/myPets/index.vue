@@ -2,6 +2,21 @@
   <v-container fluid>
     <v-row no-gutters>
       <v-col class="col-12 col-sm-12">
+        <div v-if="pets.length == 0" class="d-flex flex-column justify-space-between">
+          <p class="no-mascotas text-center">No tienes mascotas registradas</p>
+          <div class="d-flex flex-column text-center">
+            <v-img
+              src="/cat.png"
+              aspect-ratio="2.5"
+            >
+              <v-btn flat icon color="primary" disabled>
+                <v-icon size="100" :nuxt="true" to="myPets/new">mdi-plus</v-icon>
+              </v-btn>
+          </v-img>
+          </div>
+
+          
+        </div>
         <v-card class="mb-2 elevation-5 rounded-lg" v-for="pet in pets" :key="pet.id" :to="`myPets/map/${pet.id}`">
           <v-card-title primary-title>
             <v-avatar class="mr-2">
@@ -32,27 +47,33 @@
 </template>
 
 <script>
-  export default {
-    components: {},
-    data() {
-      return {
-        pets: [],
-        myPet: {},
-        showMap: false,
-      }
-    },
-    created() {
-      this.getPets()
-    },
-    methods: {
-      getPets() {
-        this.$axios.get('/mascotas')
-          .then((data) => {
-            this.pets = data.data
-          })
-      }
-    },
-    layout: 'myPets'
-  }
-
+    export default {
+        components: {},
+        data() {
+            return {
+                pets: [],
+                myPet: {},
+                showMap: false,
+            }
+        },
+        created() {
+            this.getPets()
+        },
+        methods: {
+            getPets() {
+                this.$axios.get('/mascotas')
+                    .then((data) => {
+                        this.pets = data.data
+                    })
+            }
+        },
+        layout: 'myPets'
+    }
 </script>
+
+<style scoped>
+    .no-mascotas {
+        font-size: 30px;
+        font-weight: bold;
+    }
+</style>

@@ -28,6 +28,8 @@
 
     export default {
         name: 'notifications',
+        middleware: "auth",
+
         data() {
             return {
                 drawer: false

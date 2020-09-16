@@ -27,6 +27,8 @@
     import BottomNavigationBar from '../components/BottomNavigationBar'
 
     export default {
+        middleware: "auth",
+
         data() {
             return {
                 drawer: false
