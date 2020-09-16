@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "publicaciones",
+  "info": {
+    "name": "Publicaciones"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "contenido": {
+      "type": "text"
+    },
+    "likes": {
+      "type": "integer"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "imagen_principal": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false
+    }
+  }
+}
