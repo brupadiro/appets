@@ -34,20 +34,8 @@
                 if (!files.length)
                     return
                 this.$emit('uploadedPicture', files[0])
-                this.createImage(files[0])
 
-            },
-            createImage(file) {
-                var image = new Image()
-                var reader = new FileReader()
-                var vm = this
-
-                reader.onload = (e) => {
-                    vm.image = e.target.result
-                };
-                reader.readAsDataURL(file)
-
-            },
+            }
         }
     }
 </script>

@@ -39,3 +39,13 @@
         }
     }
 </script>
+
+<style scoped>
+    .relative {
+        position: relative;
+    }
+    
+    .absolute {
+        position: absolute;
+    }
+</style>

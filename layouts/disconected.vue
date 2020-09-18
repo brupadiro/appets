@@ -12,16 +12,21 @@
     import BottomNavigationBar from '../components/BottomNavigationBar'
 
     export default {
+        middleware(cntx) {
+            if (cntx.$auth.loggedIn) {
+                cntx.redirect("/")
+            }
+        },
         data() {
             return {
                 drawer: false
             }
         },
         methods: {
-          logout(){
-            this.$auth.logout()
-            this.$router.push('/login')
-          }
+            logout() {
+                this.$auth.logout()
+                this.$router.push('/login')
+            }
         },
         components: {
             BottomNavigationBar

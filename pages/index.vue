@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col class="col-12 col-sm-12" v-for="pub in publicaciones" :key="pub.pk">
+      <v-col class="col-12 col-sm-12" v-for="(pub,index) in publicaciones" :key="pub.pk">
         <postCard :publication="pub" @showpublication="getPublication($event)" class="mb-2"></postCard>
       </v-col>
     </v-row>
@@ -61,76 +61,76 @@
               </v-list-item>
               <v-divider :key="index"></v-divider>
             </template>
-          </v-list>
-        </v-card-text>
-        <v-divider color="#cecece" height="1"></v-divider>
-        <v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
-          <v-input hide-details class="d-flex justify-space-between">
-            <v-text-field placeholder="Tu comentario..." outlined dense rounded hide-details v-model="comentario.contenido" background-color="white"></v-text-field>
-            <v-btn icon class="font-weight-light overline" color="primary" @click="addComment()">
-              <v-icon>mdi-send</v-icon>
-            </v-btn>
-          </v-input>
-        </v-card-actions>
+</v-list>
+</v-card-text>
+<v-divider color="#cecece" height="1"></v-divider>
+<v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
+    <v-input hide-details class="d-flex justify-space-between">
+        <v-text-field placeholder="Tu comentario..." outlined dense rounded hide-details v-model="comentario.contenido" background-color="white"></v-text-field>
+        <v-btn icon class="font-weight-light overline" color="primary" @click="addComment()">
+            <v-icon>mdi-send</v-icon>
+        </v-btn>
+    </v-input>
+</v-card-actions>
 
-      </v-card>
-    </v-dialog>
-  </v-container>
+</v-card>
+</v-dialog>
+</v-container>
 </template>
 
 <script>
-  import postCard from "../components/postCard.vue"
-  export default {
-    components: {
-      postCard
-    },
-    data() {
-      return {
-        modalComments: false,
-        publicaciones: [],
-        publication: {
-          user: {},
-          imagen_principal: {}
+    import postCard from "../components/postCard.vue"
+    export default {
+        components: {
+            postCard
         },
-        comentario: {}
+        data() {
+            return {
+                modalComments: false,
+                publicaciones: [],
+                publication: {
+                    user: {},
+                    imagen_principal: {}
+                },
+                comentario: {}
 
-      }
-    },
-    created() {
-      this.getPosts()
-    },
-    mounted() {
-      this.$root.$on('newPublication', () => {
-        this.getPosts()
-      })
-    },
-    methods: {
-      getPosts() {
-        this.$axios.get('/publicaciones/')
-          .then((data) => {
-            this.publicaciones = data.data
-          })
-      },
-      async getPublication(publication) {
-        console.log(publication)
-        this.modalComments = true
-        this.publication = publication
-        await this.$axios.get('/comentarios/?publicacion=' + publication.id, this.comentario)
-          .then((data) => {
-            this.publication.comentarios = data.data
-            this.$forceUpdate()
-          })
-      },
-      addComment() {
-        this.comentario.publicacion = this.publication.id
-        this.comentario.user = this.$auth.user.id
-        this.$axios.post('/comentarios/', this.comentario)
-          .then((data)=>{
-            this.publication.comentarios.push(data.data)
-            this.$forceUpdate()
-          })
-      },
+            }
+        },
+        created() {
+            this.getPosts()
+        },
+        mounted() {
+            this.$root.$on('newPublication', () => {
+                this.getPosts()
+            })
+        },
+        methods: {
+            getPosts() {
+                this.$axios.get('/publicaciones/')
+                    .then((data) => {
+                        this.publicaciones = data.data
+                    })
+            },
+            async getPublication(publication) {
+                console.log(publication)
+                this.modalComments = true
+                this.publication = publication
+                await this.$axios.get('/comentarios/?publicacion=' + publication.id, this.comentario)
+                    .then((data) => {
+                        this.publication.comentarios = data.data
+                        this.$forceUpdate()
+                    })
+            },
+            addComment() {
+                this.comentario.publicacion = this.publication.id
+                this.comentario.user = this.$auth.user.id
+                this.$axios.post('/comentarios/', this.comentario)
+                    .then((data) => {
+                        this.publication.comentarios.push(data.data)
+                        this.$forceUpdate()
+                        this.comentario = {}
+                    })
+            },
+        }
     }
-  }
-
 </script>

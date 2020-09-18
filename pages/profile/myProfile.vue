@@ -31,21 +31,25 @@
             }
         },
         methods: {
-            setPetName(e){
-                this.$store.dispatch('myPets/setName',e)
+            setPetName(e) {
+                this.$store.dispatch('myPets/setName', e)
             },
-            setProfilePicture(e){
+            setProfilePicture(e) {
                 console.log(e)
-                this.$store.dispatch('myPets/setProfilePicture',e)
+                this.$store.dispatch('myPets/setProfilePicture', e)
             },
             savePet() {
-                let data = new FormData() 
-                data.append(`data`,JSON.stringify(this.getPet))
-                data.append('files.profile_picture',this.getPet.profile_picture)
-                this.$axios.post('/mascotas/',data,{headers: {'Content-Type': 'multipart/form-data' }})
-                    .then(()=>{
-                        this.$router.push('/myPets')
+                let data = new FormData()
+                data.append(`data`, JSON.stringify(this.getPet))
+                data.append('files.profile_picture', this.getPet.profile_picture)
+                this.$axios.post('/mascotas/', data, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
                     })
+                    .then(() => {
+                        this.$router.push('/myPets')
+                    }).catch((error) => {})
             }
         },
         computed: {
