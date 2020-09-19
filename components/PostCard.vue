@@ -3,8 +3,8 @@
     <v-card-title primary-title>
       <v-list-item class="grow">
         <v-list-item-avatar color="grey darken-3" v-if="publication.user.profile_picture!=null">
-          <v-img class="elevation-6" :src="$axios.defaults.baseURL + publication.user.profile_picture.url" aspect-ratio="2"
-            round></v-img>
+            <v-img class="elevation-6" @click="goToProfile" :src="$axios.defaults.baseURL + publication.user.profile_picture.url" aspect-ratio="2"
+            round ></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{publication.user.username}}</v-list-item-title>
@@ -34,16 +34,22 @@
 </template>
 
 <script>
-  import moment from 'moment';
-  export default {
-    props: {
-      publication: Object
-    },
-    methods: {
-      formatDate(date) {
-        return moment(date).format('DD/MM/YYYY');
-      }
+    import moment from 'moment';
+    export default {
+        props: {
+            publication: Object,
+        },
+        methods: {
+            goToProfile() {
+                if (this.publication.user.id == this.$auth.user.id) {
+                    this.$router.push('/profile/')
+                } else {
+                    this.$router.push('/profile/' + this.publication.user.id)
+                }
+            },
+            formatDate(date) {
+                return moment(date).format('DD/MM/YYYY');
+            }
+        }
     }
-  }
-
 </script>

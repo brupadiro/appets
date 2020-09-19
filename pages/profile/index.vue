@@ -3,7 +3,7 @@
     <div class="blue-grey lighten-5">
       <v-row class="pt-5" no-gutters>
         <v-col class="col-4 d-flex flex-column justify-center align-center">
-          <p class="font-weight-black">0</p>
+          <p class="font-weight-black">{{seguidores}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidores</span>
         </v-col>
         <v-col class="col-4 text-center">
@@ -14,7 +14,7 @@
         </v-col>
 
         <v-col class="col-4 d-flex flex-column justify-center align-center">
-          <p class="font-weight-black">0</p>
+          <p class="font-weight-black">{{seguidos}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidos</span>
         </v-col>
         <v-col class="col-12 d-flex flex-column justify-center align-center">
@@ -171,12 +171,16 @@
                 },
                 comentario: {},
                 showSnackbar: false,
-                snackbarMessage: "Perfil actualizado"
+                snackbarMessage: "Perfil actualizado",
+                seguidores: 0,
+                seguidos: 0,
             }
         },
         created() {
             this.getPosts()
             this.getUser()
+            this.getSeguidos()
+            this.getSeguidores()
         },
         computed: {
             initialImage() {
@@ -195,27 +199,34 @@
                 };
                 reader.readAsDataURL(file)
             },
-            getUser() {
+            async getSeguidos() {
+                //Obtener a las personas que sigo
+                var response = await this.$axios.get(`/seguidor-seguidos/?seguidor=${this.$auth.user.id}`)
+                this.seguidos = response.data.length
+            },
+            async getSeguidores() {
+                var response = await this.$axios.get(`/seguidor-seguidos/?seguido=${this.$auth.user.id}`)
+                this.seguidores = response.data.length
+            },
+            async getUser() {
 
-                this.$axios.get(`/users/${this.$auth.user.id}/`)
+                await this.$axios.get(`/users/${this.$auth.user.id}/`)
                     .then((data) => {
                         this.profile = data.data
 
                     })
             },
             async saveProfile() {
-                this.profile.profile_picture = this.profile_picture.file
-                let profileData = new FormData()
-                profileData.append(`data`, JSON.stringify(this.profile))
-                await this.$axios.put(`/users/${this.$auth.user.id}/`, profileData).catch((error) => console.log(error))
+                this.$delete(this.profile, "profil_picture")
+                await this.$axios.put(`/users/${this.$auth.user.id}/`, this.profile).catch((error) => console.log(error))
 
                 let profilePicture = new FormData()
                 profilePicture.append('field', 'profile_picture')
-                profilePicture.append('files', this.profile.profile_picture)
+                profilePicture.append('files', this.profile_picture.file)
                 profilePicture.append('source', 'users-permissions');
                 profilePicture.append('ref', 'user')
                 profilePicture.append('refId', this.$auth.user.id)
-                this.$axios.post('/upload', profilePicture, {
+                await this.$axios.post('/upload', profilePicture, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -223,6 +234,8 @@
                     this.closeModalPerfil(error.message)
                 })
                 this.closeModalPerfil("")
+                await this.getUser()
+                await this.getPosts()
             },
             async getPublication(publication) {
                 this.modalComments = true
@@ -233,8 +246,8 @@
                         this.$forceUpdate()
                     })
             },
-            getPosts() {
-                this.$axios.get(`/publicaciones/?user=${this.$auth.user.id}`)
+            async getPosts() {
+                await this.$axios.get(`/publicaciones/?user=${this.$auth.user.id}`)
                     .then((data) => {
                         this.publications = data.data
                     })
