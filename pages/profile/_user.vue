@@ -182,7 +182,6 @@
                 this.seguidores = response.data.length
                 var found = response.data.find(
                     element => {
-                        console.log(element)
                         if (element.seguidor.id == this.$auth.user.id) {
 
                             this.idSeguidor = element.id

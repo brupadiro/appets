@@ -12,9 +12,6 @@
     "contenido": {
       "type": "text"
     },
-    "likes": {
-      "type": "integer"
-    },
     "user": {
       "plugin": "users-permissions",
       "model": "user"

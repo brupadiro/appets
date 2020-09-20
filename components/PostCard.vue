@@ -10,7 +10,6 @@
           <v-list-item-title>{{publication.user.username}}</v-list-item-title>
           <v-list-item-title class="font-weight-light">{{formatDate(publication.created_at)}}</v-list-item-title>
         </v-list-item-content>
-
         <v-row align="center" justify="end">
           <v-icon right>mdi-dots-vertical</v-icon>
         </v-row>
@@ -23,8 +22,10 @@
       :src="$axios.defaults.baseURL + publication.imagen_principal.url">
     </v-img>
     <v-card-actions class="d-flex justify-space-between">
-      <v-btn text small class="font-weight-regular">
-        <v-icon dark left>mdi-thumb-up-outline</v-icon>
+      <v-btn text small class="font-weight-regular" @click="likeOrDislike">
+        {{likes}}
+        <v-icon dark left v-if="!like">mdi-thumb-up-outline</v-icon>
+        <v-icon dark left v-else >mdi-thumb-up</v-icon>
       </v-btn>
       <v-btn text small class="font-weight-regular" @click="$emit('showpublication',publication)">
         <v-icon dark left>mdi-comment-outline</v-icon>
@@ -39,6 +40,31 @@
         props: {
             publication: Object,
         },
+        data() {
+            return {
+                likes: this.publication.likes.length,
+                like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
+            }
+        },
+        computed: {
+            likeId: {
+                get() {
+                    var details = this.publication.likes.find(element => element.user_id == this.$auth.user.id)
+                    return (details == null) ? 0 : {
+                        likeId: details.like_id,
+                        index: this.publication.likes.findIndex(element => element.user_id == this.$auth.user.id)
+                    }
+                },
+                set(newValue) {
+                    console.log(newValue)
+                    this.$set(this.publication.likes, this.publication.likes.length, {
+                        like_id: newValue,
+                        user_id: this.$auth.user.id,
+                        username: this.$auth.user.username
+                    })
+                }
+            }
+        },
         methods: {
             goToProfile() {
                 if (this.publication.user.id == this.$auth.user.id) {
@@ -49,6 +75,27 @@
             },
             formatDate(date) {
                 return moment(date).format('DD/MM/YYYY');
+            },
+            likeOrDislike() {
+                if (this.like) {
+                    this.$axios.delete('/likes/' + this.likeId.likeId).then(response => {
+                        this.like = false
+                        let index = this.likeId.index
+                        this.$delete(this.publication.likes, index)
+                        this.likes--
+                    })
+                } else {
+                    let body = {
+                        user: this.$auth.user.id,
+                        publicacion: this.publication.id
+                    }
+                    this.$axios.post('/likes/', body).then(response => {
+                        this.likeId = response.data.id
+                        this.like = true
+                        this.likes++
+
+                    })
+                }
             }
         }
     }
