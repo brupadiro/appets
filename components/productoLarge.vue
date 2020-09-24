@@ -13,8 +13,7 @@
       </v-col>
     </v-row>
     <v-btn fab absolute right color="primary" width="50" height="50" style="right: 10px;bottom:10px">
-      <v-icon color="white" v-if="favorite === false" @click="showProductoDetails">mdi-cart-outline</v-icon>
-      <v-icon color="yellow" @click="showProductoDetails"v-else>mdi-cart</v-icon>
+      <v-icon color="white" @click="showProductoDetails">mdi-cart-plus</v-icon>
     </v-btn>
   </v-card>
 </template>
@@ -24,23 +23,9 @@
         props: {
             producto: Object
         },
-        data() {
-            return {
-                favorite: false,
-                showMore: false
-            }
-        },
-        created() {
-            if (localStorage.star !== undefined && localStorage.star.length > 1) {
-                let favorites = JSON.parse(localStorage.star)
-                if (favorites[this.producto.pk] === true) {
-                    this.favorite = true
-                }
-            }
-        },
         methods: {
             showProductoDetails() {
-                this.$emit('productoDetails', this.producto)
+                this.$router.push('/producto/' + this.producto.id)
             }
         }
     }
