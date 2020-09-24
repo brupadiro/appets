@@ -13,16 +13,16 @@
             prepend-inner-icon="mdi-magnify"
             ></v-text-field>
           </div>
-        <div class="pa-4">
-            <producto-large 
-        v-for="(producto,index) in showProductos" 
-        :producto="producto" 
-        :key="index" 
-        class="mb-5"
-    
-        >
-    
-    </producto-large>
+        <div class="pa-4 lista_de_productos">
+            <v-row >
+                <v-col class="col-6" v-for="(producto,index) in showProductos" >
+                    <producto-large 
+                    :producto="producto" 
+                    :key="index" 
+                    class="mb-5"
+                    ></producto-large>
+                </v-col>
+            </v-row>
         </div>
     </div>
 </template>
@@ -73,5 +73,9 @@
         left: 0;
         right: 0;
         z-index: 5;
+    }
+    
+    .lista_de_productos {
+        margin-top: 20vh;
     }
 </style>

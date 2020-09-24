@@ -12,7 +12,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-btn fab absolute right color="primary" width="50" height="50" style="right: 10px;bottom:10px">
+    <v-btn fab absolute right color="primary" width="35" height="35" style="right: 10px;bottom:10px">
       <v-icon color="white" @click="showProductoDetails">mdi-cart-plus</v-icon>
     </v-btn>
   </v-card>
