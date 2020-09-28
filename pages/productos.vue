@@ -14,8 +14,9 @@
             ></v-text-field>
           </div>
         <div class="pa-4 lista_de_productos">
+            <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts" absolute><v-icon>mdi-refresh</v-icon></v-btn>
             <v-row >
-                <v-col class="col-6" v-for="(producto,index) in showProductos" >
+                <v-col class="col-6" v-for="(producto,index) in productos" >
                     <producto-large 
                     :producto="producto" 
                     :key="index" 
@@ -34,31 +35,34 @@
         data() {
             return {
                 productos: [],
-                showProductos: [],
                 showProductoDialog: false,
+                showRefresh: false,
                 producto: {},
                 buscar: ""
-            }
-        },
-        watch: {
-            buscar(newVal, oldVal) {
-                if (newVal == "") {
-                    this.showProductos = this.productos
-                    return
-                }
-
-                this.showProductos = []
-                this.productos.forEach(element => {
-                    if (element.nombre.toLowerCase().includes(newVal.toLowerCase()))
-                        this.showProductos.push(element)
-                })
             }
         },
         created() {
             this.$axios.get('/productos/').then(response => {
                 this.productos = response.data
-                this.showProductos = response.data
             })
+        },
+        watch: {
+            buscar(newVal, oldVal) {
+                if (newVal == "") {
+                    this.showRefresh = false
+                    return
+                }
+                this.showRefresh = true
+
+            }
+        },
+        methods: {
+            refreshProducts() {
+                this.$axios.get('/productos/').then(response => {
+                    this.productos = response.data
+                    this.showRefresh = false
+                })
+            }
         },
         components: {
             productoLarge,
@@ -77,5 +81,15 @@
     
     .lista_de_productos {
         margin-top: 20vh;
+        display: relative;
+    }
+    
+    .btnRefresh {
+        z-index: 5;
+        top: 20vh;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
     }
 </style>

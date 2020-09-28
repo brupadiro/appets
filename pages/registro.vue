@@ -45,13 +45,21 @@
         layout: 'disconected',
         data() {
             return {
-                profile: {},
+                profile: {
+                    profile_picture: null
+                },
                 showSnackbar: false,
                 show1: false
             }
         },
         methods: {
             createProfile() {
+
+                if (this.profile.profile_picture == null) {
+                    this.showSnackbar = true
+                    return;
+                }
+
                 axios.post(this.$axios.defaults.baseURL + '/auth/local/register', this.profile)
                     .then((data) => {
                         this.login()
