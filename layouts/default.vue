@@ -1,12 +1,11 @@
 <template>
   <v-app>
     <v-app-bar fixed app class="elevation-3" dense color="primary">
-      <img src="/logo.png" width="40px">
       <v-spacer></v-spacer>
-      <v-toolbar-title v-text="'Feed'" class="green--text overline" />
+      <v-toolbar-title v-text="'Muro'" class="white--text overline" />
       <v-spacer></v-spacer>
       <v-btn icon small @click="addPublication = !addPublication">
-        <v-icon>mdi-application</v-icon>
+        <v-icon>mdi-tooltip-plus-outline</v-icon>
       </v-btn>
     </v-app-bar>
     <v-content class="blue-grey lighten-5">

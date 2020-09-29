@@ -1,6 +1,6 @@
 <template>
     <v-app>
-      <v-app-bar fixed app class="elevation-0 green" dense>
+      <v-app-bar fixed app class="elevation-0 primary" dense>
         <v-row no-gutters>
           <v-col class="col-4  d-flex justify-center align-center">
           </v-col>

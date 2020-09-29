@@ -28,6 +28,7 @@
         <v-icon dark left v-else >mdi-thumb-up</v-icon>
       </v-btn>
       <v-btn text small class="font-weight-regular" @click="$emit('showpublication',publication)">
+          <!-- {{comentarios_cantidad}} -->
         <v-icon dark left>mdi-comment-outline</v-icon>
       </v-btn>
     </v-card-actions>
@@ -38,12 +39,13 @@
     import moment from 'moment';
     export default {
         props: {
-            publication: Object,
+            publication: Object
         },
         data() {
             return {
                 likes: this.publication.likes.length,
-                like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
+                like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0,
+                // comentarios_cantidad: this.publicacion.comentarios.length
             }
         },
         computed: {

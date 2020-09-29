@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col class="col-12 col-sm-12" v-for="(pub,index) in publicaciones" :key="pub.pk">
-        <postCard :publication="pub" @showpublication="getPublication($event)" class="mb-2"></postCard>
+        <postCard :publication="pub" :key="index" @showpublication="getPublication($event)" class="mb-2"></postCard>
       </v-col>
     </v-row>
     <v-dialog scrollable fullscreen persistent v-model="modalComments">
@@ -49,9 +49,9 @@
           <v-list three-line color="blue-grey lighten-5 pt-0">
             <template v-for="(comentario, index) in publication.comentarios">
 
-              <v-list-item :key="comentario.id" color="black">
+              <v-list-item :key="index" color="black">
                 <v-list-item-avatar>
-                  <v-img :src="$axios.defaults.baseURL + publication.imagen_principal.url"></v-img>
+                  <v-img :src="$axios.defaults.baseURL + comentario.user.profile_picture.url"></v-img>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
@@ -59,7 +59,7 @@
                   <v-list-item-subtitle v-html="comentario.contenido"></v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-divider :key="index"></v-divider>
+              <v-divider></v-divider>
             </template>
 </v-list>
 </v-card-text>
