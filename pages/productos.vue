@@ -27,6 +27,10 @@
             <div class="d-flex flex-column justify-center align-center text-center" v-else>
                 <h2 class="blue-grey--text lighten-5 mt-10">No se encontraron productos</h2>
             </div>
+            <v-pagination
+                :length="Math.ceil(cantidadDeProductos / limit)"
+                v-model="currentPage"
+              ></v-pagination>
         </div>
     </div>
 </template>
@@ -42,13 +46,21 @@
                 showProductoDialog: false,
                 showRefresh: false,
                 producto: {},
-                buscar: ""
+                buscar: "",
+                start: 0,
+                cantidadDeProductos: 0,
+                currentPage: 1,
+                cantidadDePaginas: 0,
+                limit: 12
             }
         },
         created() {
-            this.$axios.get('/productos/').then(response => {
+            this.$axios.get(`/productos/?_start=${this.start}&_limit=${this.limit}`).then(response => {
                 this.productos = response.data
                 this.initProductos = response.data
+            })
+            this.$axios.get('/productos/count').then(response => {
+                this.cantidadDeProductos = response.data
             })
         },
         watch: {
@@ -60,14 +72,35 @@
                 }
                 this.showRefresh = true
 
+            },
+            currentPage(newVal, oldVal) {
+                console.log("currentPage")
+                this.$axios.get(`/productos/?_start=${this.currentPage - 1}&_limit=${this.limit}`).then(response => {
+                    this.productos = response.data
+                })
             }
         },
         methods: {
             refreshProducts() {
-                this.$axios.get('/productos/?nombre_contains=' + this.buscar).then(response => {
+                this.$axios.get(`/productos/?nombre_contains=${this.buscar}&_start=${this.currentPage - 1}&_limit=${this.limit}`).then(response => {
                     this.productos = response.data
                     this.showRefresh = false
                 })
+            },
+            colorBtn(number) {
+                return (true) ? "primary" : "primary_obscure"
+            }
+        },
+        computed: {
+            btns() {
+                // Devuelve un arreglo de tamaño maximo = 3
+                var btns = []
+                if (this.cantidadDePaginas <= 3) {
+                    for (let i = 0; i < this.cantidadDePaginas; i++) {
+                        btns.push(i + 1)
+                    }
+                }
+                return btns
             }
         },
         components: {
