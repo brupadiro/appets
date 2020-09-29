@@ -15,7 +15,7 @@
           </div>
         <div class="pa-4 lista_de_productos">
             <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts" absolute><v-icon>mdi-refresh</v-icon></v-btn>
-            <v-row >
+            <v-row v-if="productos.length != 0" >
                 <v-col class="col-6" v-for="(producto,index) in productos" >
                     <producto-large 
                     :producto="producto" 
@@ -24,6 +24,9 @@
                     ></producto-large>
                 </v-col>
             </v-row>
+            <div class="d-flex flex-column justify-center align-center text-center" v-else>
+                <h2 class="blue-grey--text lighten-5 mt-10">No se encontraron productos</h2>
+            </div>
         </div>
     </div>
 </template>
@@ -35,6 +38,7 @@
         data() {
             return {
                 productos: [],
+                initProductos: [],
                 showProductoDialog: false,
                 showRefresh: false,
                 producto: {},
@@ -44,12 +48,14 @@
         created() {
             this.$axios.get('/productos/').then(response => {
                 this.productos = response.data
+                this.initProductos = response.data
             })
         },
         watch: {
             buscar(newVal, oldVal) {
                 if (newVal == "") {
                     this.showRefresh = false
+                    this.productos = this.initProductos
                     return
                 }
                 this.showRefresh = true
@@ -58,7 +64,7 @@
         },
         methods: {
             refreshProducts() {
-                this.$axios.get('/productos/').then(response => {
+                this.$axios.get('/productos/?nombre_contains=' + this.buscar).then(response => {
                     this.productos = response.data
                     this.showRefresh = false
                 })
@@ -86,7 +92,7 @@
     
     .btnRefresh {
         z-index: 5;
-        top: 20vh;
+        top: 25%;
         margin-left: auto;
         margin-right: auto;
         left: 0;

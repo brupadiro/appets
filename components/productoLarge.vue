@@ -6,9 +6,9 @@
         <img :src="$axios.defaults.baseURL + producto.img_principal[0].url" width="100%" />
       </v-col>
       <v-col class="col-12">
-        <div class="pl-3">
-            <h2 class="">{{producto.nombre}}</h2>
-          <h2>$&nbsp;<span class="font-weight-medium-lg">{{producto.precio}}</span></h2>
+        <div class="pl-2 text-truncate">
+            <h3>{{producto.nombre}}</h3>
+          <h3>$&nbsp;<span class="font-weight-medium-lg">{{producto.precio}}</span></h3>
         </div>
       </v-col>
     </v-row>
