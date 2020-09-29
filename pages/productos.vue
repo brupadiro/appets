@@ -14,7 +14,7 @@
             ></v-text-field>
           </div>
         <div class="pa-4 lista_de_productos">
-            <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts" absolute><v-icon>mdi-refresh</v-icon></v-btn>
+            <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts"><v-icon>mdi-refresh</v-icon></v-btn>
             <v-row v-if="productos.length != 0" >
                 <v-col class="col-6" v-for="(producto,index) in productos" >
                     <producto-large 
@@ -28,6 +28,7 @@
                 <h2 class="blue-grey--text lighten-5 mt-10">No se encontraron productos</h2>
             </div>
             <v-pagination
+            v-show="cantidadDeProductos != 0"
                 :length="Math.ceil(cantidadDeProductos / limit)"
                 v-model="currentPage"
               ></v-pagination>
@@ -68,6 +69,7 @@
                 if (newVal == "") {
                     this.showRefresh = false
                     this.productos = this.initProductos
+                    this.cantidadDeProductos = this.productos.length
                     return
                 }
                 this.showRefresh = true
@@ -84,6 +86,8 @@
             refreshProducts() {
                 this.$axios.get(`/productos/?nombre_contains=${this.buscar}&_start=${this.currentPage - 1}&_limit=${this.limit}`).then(response => {
                     this.productos = response.data
+                    if (this.productos.length == 0)
+                        this.cantidadDeProductos = 0
                     this.showRefresh = false
                 })
             },
@@ -124,6 +128,7 @@
     }
     
     .btnRefresh {
+        position: fixed;
         z-index: 5;
         top: 25%;
         margin-left: auto;
