@@ -10,9 +10,6 @@
           <v-list-item-title>{{publication.user.username}}</v-list-item-title>
           <v-list-item-title class="font-weight-light">{{formatDate(publication.created_at)}}</v-list-item-title>
         </v-list-item-content>
-        <v-row align="center" justify="end">
-          <v-icon right>mdi-dots-vertical</v-icon>
-        </v-row>
       </v-list-item>
     </v-card-title>
     <v-card-text>
@@ -28,7 +25,7 @@
         <v-icon dark left v-else >mdi-thumb-up</v-icon>
       </v-btn>
       <v-btn text small class="font-weight-regular" @click="$emit('showpublication',publication)">
-          <!-- {{comentarios_cantidad}} -->
+          {{publication.comentarios_cant}}
         <v-icon dark left>mdi-comment-outline</v-icon>
       </v-btn>
     </v-card-actions>
@@ -47,6 +44,14 @@
                 like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0,
                 // comentarios_cantidad: this.publicacion.comentarios.length
             }
+        },
+        mounted() {
+            this.$root.$on("changeLike", (newLike) => {
+                if (newLike.publication == this.publication.id) {
+                    this.like = newLike.like
+                    this.likeOrDislike()
+                }
+            })
         },
         computed: {
             likeId: {

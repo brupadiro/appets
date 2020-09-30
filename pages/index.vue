@@ -1,10 +1,15 @@
 <template>
   <v-container fluid>
+
+    <!-- Todos los posts -->
+
     <v-row>
       <v-col class="col-12 col-sm-12" v-for="(pub,index) in publicaciones" :key="pub.pk">
-        <postCard :publication="pub" :key="index" @showpublication="getPublication($event)" class="mb-2"></postCard>
+        <postCard :publication="pub" :key="index" @showpublication="getPublication($event, index)" class="mb-2"></postCard>
       </v-col>
     </v-row>
+
+    <!-- Post especifico -->
     <v-dialog scrollable fullscreen persistent v-model="modalComments">
       <v-card outlined class="elevation-0 ">
         <v-card-title class="pa-0">
@@ -21,12 +26,8 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{publication.user.username}}</v-list-item-title>
-                <v-list-item-title class="font-weight-light">11/08/2020</v-list-item-title>
+                <v-list-item-title class="font-weight-light">{{publication.created_at.split('T')[0]}}</v-list-item-title>
               </v-list-item-content>
-
-              <v-row align="center" justify="end">
-                <v-icon right>mdi-dots-vertical</v-icon>
-              </v-row>
             </v-list-item>
 
             <span> {{publication.contenido}}</span>
@@ -36,11 +37,11 @@
           </v-img>
           <v-divider color="#eceff1" height="1"></v-divider>
         <v-row class="d-flex justify-space-between pa-3">
-            <v-btn text small class="font-weight-regular">
-              <v-icon dark left>mdi-thumb-up-outline</v-icon>
-            </v-btn>
-            <v-btn text small class="font-weight-regular" @click="$emit('showpublication',publication)">
-              <v-icon dark left>mdi-comment-outline</v-icon>
+            <v-btn text small class="font-weight-regular" @click="likeOrDislike">
+              {{publication.likes.length}}
+              <v-icon class="pl-4" dark left v-if="!like">mdi-thumb-up-outline</v-icon>
+              <v-icon class="pl-4" dark left v-else >mdi-thumb-up</v-icon>
+              
             </v-btn>
             <v-btn text small class="font-weight-regular">
               <v-icon dark left>mdi-share-outline</v-icon>
@@ -61,6 +62,11 @@
               </v-list-item>
               <v-divider></v-divider>
             </template>
+<div class="text-center pa-5" v-show="theres_more_comments">
+    <v-btn color="primary" fab outlined @click="getMoreComments">
+        <v-icon>mdi-plus</v-icon>
+    </v-btn>
+</div>
 </v-list>
 </v-card-text>
 <v-divider color="#cecece" height="1"></v-divider>
@@ -80,6 +86,8 @@
 
 <script>
     import postCard from "../components/postCard.vue"
+    import moment from 'moment';
+
     export default {
         components: {
             postCard
@@ -88,12 +96,20 @@
             return {
                 modalComments: false,
                 publicaciones: [],
+                //Estos datos son para el dialog - modularizarlos mejor
+                indexLike: null,
                 publication: {
                     user: {},
-                    imagen_principal: {}
+                    imagen_principal: {},
+                    likes: [],
+                    created_at: ""
                 },
-                comentario: {}
-
+                comentario: {},
+                theres_more_comments: true,
+                like: false,
+                // Paginacion de comentarios
+                limit: 4,
+                start: 0
             }
         },
         created() {
@@ -104,6 +120,25 @@
                 this.getPosts()
             })
         },
+        computed: {
+            likeId: {
+                get() {
+                    var details = this.publication.likes.find(element => element.user_id == this.$auth.user.id)
+                    return (details == null) ? 0 : {
+                        likeId: details.like_id,
+                        index: this.publication.likes.findIndex(element => element.user_id == this.$auth.user.id)
+                    }
+                },
+                set(newValue) {
+                    console.log(newValue)
+                    this.$set(this.publication.likes, this.publication.likes.length, {
+                        like_id: newValue,
+                        user_id: this.$auth.user.id,
+                        username: this.$auth.user.username
+                    })
+                }
+            }
+        },
         methods: {
             getPosts() {
                 this.$axios.get('/publicaciones/')
@@ -111,16 +146,30 @@
                         this.publicaciones = data.data
                     })
             },
-            async getPublication(publication) {
-                console.log(publication)
+            getPublication(publication, index) {
+                this.likeIndex = index
                 this.modalComments = true
                 this.publication = publication
-                await this.$axios.get('/comentarios/?publicacion=' + publication.id, this.comentario)
+                this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start}&_limit=${this.limit}`, this.comentario)
                     .then((data) => {
                         this.publication.comentarios = data.data
+                        if (data.data.length < this.limit) {
+                            this.theres_more_comments = false
+                        }
                         this.$forceUpdate()
                     })
+
+                this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
             },
+            // getMoreComments() {
+            //     this.start++
+            //         this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start}&_limit=${this.limit}`).then((data) => {
+            //             if (data.data.length < this.limit) {
+            //                 this.theres_more_comments = false
+            //             }
+            //             this.$forceUpdate()
+            //         })
+            // },
             addComment() {
                 this.comentario.publicacion = this.publication.id
                 this.comentario.user = this.$auth.user.id
@@ -131,6 +180,43 @@
                         this.comentario = {}
                     })
             },
+            formatDate(date) {
+                return moment(date).format('DD/MM/YYYY');
+            },
+            likeOrDislike(index) {
+                console.log(index)
+                if (this.like) {
+                    this.$axios.delete('/likes/' + this.likeId.likeId).then(response => {
+                        this.like = false
+                        let index = this.likeId.index
+                        this.$delete(this.publication.likes, index)
+                        this.likes--
+                            let likeIndex = this.publicaciones[this.likeIndex].likes.map((like, index) => {
+                                if (like.user_id == this.$auth.user.id) {
+                                    return index
+                                }
+                            })
+                        this.$delete(this.publicaciones[this.likeIndex].likes, likeIndex)
+                    })
+                } else {
+                    let body = {
+                        user: this.$auth.user.id,
+                        publicacion: this.publication.id
+                    }
+                    this.$axios.post('/likes/', body).then(response => {
+                        this.likeId = response.data.id
+                        this.like = true
+                        this.likes++
+
+                    })
+                }
+                this.$root.$emit("changeLike", {
+                    like: this.like,
+                    publication: this.publication.id
+                })
+
+            }
+
         }
     }
 </script>

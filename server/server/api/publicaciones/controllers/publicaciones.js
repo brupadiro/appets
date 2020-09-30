@@ -36,6 +36,8 @@ module.exports = {
                         username: element.user.username
                     }
                 })
+                let comentarios = await strapi.query('comentarios').find({ publicacion: entity.id })
+                entity.comentarios_cant = comentarios.length
                 return entity
             })
         );
