@@ -42,7 +42,6 @@
             return {
                 likes: this.publication.likes.length,
                 like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0,
-                // comentarios_cantidad: this.publicacion.comentarios.length
             }
         },
         mounted() {
@@ -63,7 +62,6 @@
                     }
                 },
                 set(newValue) {
-                    console.log(newValue)
                     this.$set(this.publication.likes, this.publication.likes.length, {
                         like_id: newValue,
                         user_id: this.$auth.user.id,

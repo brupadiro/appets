@@ -95,18 +95,6 @@
                 return (true) ? "primary" : "primary_obscure"
             }
         },
-        computed: {
-            btns() {
-                // Devuelve un arreglo de tamaño maximo = 3
-                var btns = []
-                if (this.cantidadDePaginas <= 3) {
-                    for (let i = 0; i < this.cantidadDePaginas; i++) {
-                        btns.push(i + 1)
-                    }
-                }
-                return btns
-            }
-        },
         components: {
             productoLarge,
         }

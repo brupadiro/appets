@@ -63,8 +63,8 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     })
-                    .then(() => {
-                        this.$root.$emit('newPublication')
+                    .then((data) => {
+                        this.$root.$emit('newPublication', data.data)
                         this.$emit('input', false)
                     })
             }

@@ -7,6 +7,7 @@
       <v-col class="col-12 col-sm-12" v-for="(pub,index) in publicaciones" :key="pub.pk">
         <postCard :publication="pub" :key="index" @showpublication="getPublication($event, index)" class="mb-2"></postCard>
       </v-col>
+      <v-btn color="success" @click="getMorePulications" v-show="theres_more_publications" >more posts</v-btn>
     </v-row>
 
     <!-- Post especifico -->
@@ -96,6 +97,10 @@
             return {
                 modalComments: false,
                 publicaciones: [],
+                limit_publicaciones: 2,
+                start_publicaciones: 0,
+                theres_more_publications: true,
+
                 //Estos datos son para el dialog - modularizarlos mejor
                 indexLike: null,
                 publication: {
@@ -108,16 +113,16 @@
                 theres_more_comments: true,
                 like: false,
                 // Paginacion de comentarios
-                limit: 4,
-                start: 0
+                limit_comentarios: 1,
+                start_comentarios: 0
             }
         },
         created() {
             this.getPosts()
         },
         mounted() {
-            this.$root.$on('newPublication', () => {
-                this.getPosts()
+            this.$root.$on('newPublication', (newPublication) => {
+                this.publicaciones.unshift(newPublication)
             })
         },
         computed: {
@@ -130,7 +135,6 @@
                     }
                 },
                 set(newValue) {
-                    console.log(newValue)
                     this.$set(this.publication.likes, this.publication.likes.length, {
                         like_id: newValue,
                         user_id: this.$auth.user.id,
@@ -141,7 +145,7 @@
         },
         methods: {
             getPosts() {
-                this.$axios.get('/publicaciones/')
+                this.$axios.get(`/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`)
                     .then((data) => {
                         this.publicaciones = data.data
                     })
@@ -150,10 +154,10 @@
                 this.likeIndex = index
                 this.modalComments = true
                 this.publication = publication
-                this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start}&_limit=${this.limit}`, this.comentario)
+                this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start_comentarios}&_limit=${this.limit_comentarios}`, this.comentario)
                     .then((data) => {
                         this.publication.comentarios = data.data
-                        if (data.data.length < this.limit) {
+                        if (data.data.length < this.limit_comentarios) {
                             this.theres_more_comments = false
                         }
                         this.$forceUpdate()
@@ -161,15 +165,27 @@
 
                 this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
             },
-            // getMoreComments() {
-            //     this.start++
-            //         this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start}&_limit=${this.limit}`).then((data) => {
-            //             if (data.data.length < this.limit) {
-            //                 this.theres_more_comments = false
-            //             }
-            //             this.$forceUpdate()
-            //         })
-            // },
+            getMoreComments() {
+                this.start_comentarios += this.limit_comentarios
+                this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start_comentarios}&_limit=${this.limit_comentarios}`).then((data) => {
+                    this.publication.comentarios = this.publication.comentarios.concat(data.data)
+                    if (this.publication.comentarios.length == this.publication.comentarios_cant) {
+                        this.theres_more_comments = false
+                    }
+                    this.$forceUpdate()
+                })
+            },
+            getMorePulications() {
+                this.start_publicaciones += this.limit_publicaciones
+                this.$axios.get(`/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`)
+                    .then((data) => {
+
+                        this.publicaciones = this.publicaciones.concat(data.data)
+                        if (data.data.length == 0) {
+                            this.theres_more_publications = false
+                        }
+                    })
+            },
             addComment() {
                 this.comentario.publicacion = this.publication.id
                 this.comentario.user = this.$auth.user.id
@@ -184,7 +200,6 @@
                 return moment(date).format('DD/MM/YYYY');
             },
             likeOrDislike(index) {
-                console.log(index)
                 if (this.like) {
                     this.$axios.delete('/likes/' + this.likeId.likeId).then(response => {
                         this.like = false
