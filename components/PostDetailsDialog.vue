@@ -15,12 +15,8 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{publication.user.username}}</v-list-item-title>
-                  <v-list-item-title class="font-weight-light">11/08/2020</v-list-item-title>
+                  <v-list-item-title class="font-weight-light">{{formatDate(publication.created_at)}}</v-list-item-title>
                 </v-list-item-content>
-  
-                <v-row align="center" justify="end">
-                  <v-icon right>mdi-dots-vertical</v-icon>
-                </v-row>
               </v-list-item>
   
               <span> {{publication.contenido}} </span>
@@ -30,7 +26,7 @@
             </v-img>
             <v-divider color="#eceff1" height="1"></v-divider>
           <v-row class="d-flex justify-space-between pa-3">
-              <v-btn text small class="font-weight-regular" @click="likeOrDislike">
+              <v-btn text small class="font-weight-regular" @click="changeLike">
                 {{publication.likes.length}}
                 <v-icon class="pl-4" dark left v-if="!like">mdi-thumb-up-outline</v-icon>
                 <v-icon class="pl-4" dark left v-else >mdi-thumb-up</v-icon>
@@ -53,7 +49,7 @@
   
                 <v-list-item :key="index" color="black">
                   <v-list-item-avatar>
-                    <v-img :src="$axios.defaults.baseURL + publication.imagen_principal.url"></v-img>
+                    <v-img :src="$axios.defaults.baseURL + comentario.user.profile_picture.url"></v-img>
                   </v-list-item-avatar>
   
                   <v-list-item-content>
@@ -85,19 +81,27 @@
 </template>
 
 <script>
+    import moment from 'moment'
+
     export default {
         props: {
             showPostDetailsDialog: false,
             publication: {
-                user: {},
-                imagen_principal: {},
-                comentarios: [],
-                likes: [],
+                type: Object,
+                default: {
+                    user: {
+                        profile_picture: {
+                            url: ''
+                        }
+                    },
+                    imagen_principal: {},
+                    comentarios: [],
+                    likes: [],
+                }
             },
         },
         data() {
             return {
-                like: false,
                 comentario: {},
                 start_comentarios: 0,
                 limit_comentarios: 2,
@@ -110,7 +114,6 @@
         },
         watch: {
             showPostDetailsDialog(newVal, oldVal) {
-                console.log("Cambio de publicacion")
                 this.loadingComments = true
                 this.theres_more_comments = true
                 this.comentarios = []
@@ -118,7 +121,6 @@
                 this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
                 this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start_comentarios}&_limit=${this.limit_comentarios}`, this.comentario)
                     .then((data) => {
-                        console.log(data.data)
                         this.comentarios = data.data
                         this.loadingComments = false
                         if (data.data.length < this.limit_comentarios) {
@@ -131,7 +133,6 @@
             getMoreComments() {
                 this.start_comentarios += this.limit_comentarios
                 this.$axios.get(`/comentarios/?publicacion=${this.publication.id}&_start=${this.start_comentarios}&_limit=${this.limit_comentarios}`).then((data) => {
-                    console.log(data.data)
                     this.comentarios = this.comentarios.concat(data.data)
                     if (this.comentarios.length == this.publication.comentarios_cant) {
                         this.theres_more_comments = false
@@ -149,7 +150,21 @@
                         this.comentario = {}
                     })
             },
-            likeOrDislike() {
+            formatDate(date) {
+                return moment(date).format('DD/MM/YYYY');
+            },
+            changeLike() {
+                console.log("Change like - PostDetailsDialog")
+                var cambiarDeLikeADislike = this.like //Si like era verdadero, entonces ahora sera falso
+
+                if (cambiarDeLikeADislike) {
+                    this.like = false
+                        //Retirar el like del arreglo de likes de la publicacion brinada por ListPost
+                    this.$emit('changeLike', false)
+                } else {
+                    this.like = true
+                    this.$emit('changeLike', true)
+                }
 
             }
 
