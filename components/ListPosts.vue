@@ -1,7 +1,16 @@
 <template>
     <div>
 
-        <div class="d-flex flex-column justify-center align-center text-center" v-if="publications.length == 0">
+        <div class="d-flex flex-column justify-center align-center text-center">
+            <v-progress-circular
+            indeterminate
+            color="primary"
+            v-show="loading"
+            class="mt-10"
+            >
+            </v-progress-circular>
+        </div>
+        <div class="d-flex flex-column justify-center align-center text-center" v-if="publications.length == 0 && !loading">
             <h2 class="blue-grey--text lighten-5 mt-10">No se encontraron publicaciones</h2>
         </div>
         <post-card v-for="(publication,index) in publications" :key="index" :publication="publication" @showpublication="getPublication($event)"></post-card>
@@ -35,6 +44,7 @@
                 limit_publicaciones: 1,
                 theres_more_publications: true,
                 showPostDetailsDialog: false,
+                loading: true,
             }
         },
         created() {
@@ -57,6 +67,7 @@
                 await this.$axios.get(url)
                     .then((data) => {
                         this.publications = data.data
+                        this.loading = false
                     })
             },
             getMorePulications() {
@@ -68,7 +79,7 @@
                     .then((data) => {
 
                         var publicacionesSinLasPublicacionesNuevas = data.data.filter(publication => !this.newPublications.some(newPublication => newPublication.id == publication.id))
-                        this.publications = this.publications.concat()
+                        this.publications = this.publications.concat(publicacionesSinLasPublicacionesNuevas)
                         if (data.data.length == 0) {
                             this.theres_more_publications = false
                         }
