@@ -154,14 +154,14 @@
                 return moment(date).format('DD/MM/YYYY');
             },
             changeLike() {
-                console.log("Change like - PostDetailsDialog")
                 var cambiarDeLikeADislike = this.like //Si like era verdadero, entonces ahora sera falso
 
                 if (cambiarDeLikeADislike) {
+                    //Retirar el like del arreglo de likes de la publicacion brinada por ListPost
                     this.like = false
-                        //Retirar el like del arreglo de likes de la publicacion brinada por ListPost
                     this.$emit('changeLike', false)
                 } else {
+                    //Agregar el like del arreglo de likes de la publicacion brinada por ListPost
                     this.like = true
                     this.$emit('changeLike', true)
                 }

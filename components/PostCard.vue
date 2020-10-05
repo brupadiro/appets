@@ -20,7 +20,7 @@
     </v-img>
     <v-card-actions class="d-flex justify-space-between">
       <v-btn text small class="font-weight-regular" @click="likeOrDislike">
-        {{likes}}
+        {{publication.likes.length}}
         <v-icon dark left v-if="!like">mdi-thumb-up-outline</v-icon>
         <v-icon dark left v-else >mdi-thumb-up</v-icon>
       </v-btn>
@@ -36,21 +36,33 @@
     import moment from 'moment';
     export default {
         props: {
-            publication: Object
+            publication: {
+                type: Object,
+                default: {
+                    likes: [],
+                }
+            }
         },
         data() {
             return {
-                likes: this.publication.likes.length,
-                like: this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0,
+                like: false,
             }
         },
         mounted() {
-            this.$root.$on("changeLike", (newLike) => {
-                if (newLike.publication == this.publication.id) {
-                    this.like = newLike.like
-                    this.likeOrDislike()
+
+            this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
+
+            this.$root.$on("changeLikePost", (publicationIndex) => {
+                if (publicationIndex == this.publication.id) {
+                    this.likes = this.publication.likes.length
+                    this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
                 }
             })
+        },
+        watch: {
+            publication(newVal, oldVal) {
+                this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
+            }
         },
         computed: {
             likeId: {
@@ -82,7 +94,9 @@
                 return moment(date).format('DD/MM/YYYY');
             },
             likeOrDislike() {
-                if (this.like) {
+                var cambiarDeLikeADislike = this.like //Si like era verdadero, entonces ahora sera falso
+
+                if (cambiarDeLikeADislike) {
                     this.$axios.delete('/likes/' + this.likeId.likeId).then(response => {
                         this.like = false
                         let index = this.likeId.index

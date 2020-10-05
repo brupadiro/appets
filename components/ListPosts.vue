@@ -54,7 +54,6 @@
                 var url = (this.user != 0) ? `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}` : `/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
                 await this.$axios.get(url)
                     .then((data) => {
-                        console.log(data.data)
                         this.publications = data.data
                     })
             },
@@ -79,11 +78,7 @@
             closePostDetailsDialog() {
                 this.showPostDetailsDialog = false
             },
-            likeOrDislike() {
-
-            },
             async changeLike(isNewLike) {
-                console.log("Change like - ListPost")
                 if (isNewLike) {
 
                     /**
@@ -100,16 +95,12 @@
                         return;
                     })
                     var likeData = response.data
-                    console.log("Like data isNewLike : " + likeData)
-                    console.log(likeData)
                         // Agregar este nuevo like a la lista de likes de la publicacion y de las pulicaciones
                     this.$set(this.publication.likes, this.publication.likes.length, {
-                        like_id: likeData.like_id,
+                        like_id: likeData.id,
                         user_id: this.$auth.user.id,
                         username: this.$auth.user.username
                     })
-
-
 
                 } else {
 
@@ -126,14 +117,15 @@
                     })
 
                     var likeIndex = this.publication.likes.findIndex(like => like.user_id == this.$auth.user.id)
-                    console.log("Like Index: " + likeIndex)
 
                     //Borar el like de la publicacion que se esta mostrando
-                    this.$delete(this.publication.likes[likeIndex], likeIndex)
-
-                    this.$forceUpdate()
+                    this.publication.likes.splice(likeIndex, 1)
 
                 }
+
+                //Notificar al post (PostCard) que la publicacion tuvo cambios
+                this.$root.$emit('changeLikePost', this.publication.id)
+
 
             }
         },

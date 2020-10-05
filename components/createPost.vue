@@ -44,13 +44,11 @@
                 if (!files.length)
                     return
                 this.publicacion.imagen_principal = files[0]
-                console.log(URL.createObjectURL(files[0]))
                 previewImg.src = URL.createObjectURL(files[0])
                 previewImg.style = "max-height: 100%;max-width: 100%"
                 this.$forceUpdate()
 
             },
-
             createPublication() {
                 const data = new FormData()
                 data.append('data', JSON.stringify({
