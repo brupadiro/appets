@@ -24,6 +24,7 @@
         data() {
             return {
                 publications: [],
+                newPublications: [],
                 publication: {
                     user: {},
                     imagen_principal: {},
@@ -46,8 +47,9 @@
                 } else {
                     this.publications.push(newPublication)
                 }
+
+                this.newPublications.push(newPublication)
             })
-            this.$root.$on('resetPosts', this.getPosts)
         },
         methods: {
             async getPosts() {
@@ -65,7 +67,8 @@
                 this.$axios.get(url)
                     .then((data) => {
 
-                        this.publications = this.publications.concat(data.data)
+                        var publicacionesSinLasPublicacionesNuevas = data.data.filter(publication => !this.newPublications.some(newPublication => newPublication.id == publication.id))
+                        this.publications = this.publications.concat()
                         if (data.data.length == 0) {
                             this.theres_more_publications = false
                         }

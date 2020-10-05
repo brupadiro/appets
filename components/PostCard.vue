@@ -61,7 +61,7 @@
         },
         watch: {
             publication(newVal, oldVal) {
-                this.like = this.publication.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
+                this.like = newVal.likes.filter(element => element.user_id == this.$auth.user.id).length > 0
             }
         },
         computed: {

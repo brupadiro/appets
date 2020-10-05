@@ -59,4 +59,17 @@ module.exports = {
         return sanitizeEntity(entity, { model: strapi.models.publicaciones })
     },
 
+    async create(ctx) {
+        let entity;
+        if (ctx.is('multipart')) {
+            const { data, files } = parseMultipartData(ctx)
+            entity = await strapi.services.publicaciones.create(data, { files })
+        } else {
+            entities = await strapi.services.publicaciones.create(ctx.request.body)
+        }
+        entity['likes'] = []
+        return sanitizeEntity(entity, { model: strapi.models.publicaciones })
+
+    }
+
 };

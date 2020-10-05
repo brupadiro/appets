@@ -160,7 +160,7 @@
                 })
                 this.closeModalPerfil("")
                 await this.getUser()
-                this.$root.$emit('resetPosts')
+                    //this.$root.$emit('resetPosts')
             },
             closeModalPerfil(messageError) {
                 this.modalEditProfile = false
