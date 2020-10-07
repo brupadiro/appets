@@ -12,69 +12,32 @@
             <v-icon v-else size="100">mdi-account-circle-outline</v-icon>
           </v-avatar>
         </v-col>
-
         <v-col class="col-4 d-flex flex-column justify-center align-center">
           <p class="font-weight-black">{{seguidos}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidos</span>
         </v-col>
         <v-col class="col-12 d-flex flex-column justify-center align-center">
-          <v-btn rounded outlined class="mt-3" @click="modalEditProfile = true">Editar perfil</v-btn>
+          <v-btn rounded outlined class="mt-3" @click="followUnfollow">{{seguirODejarSeguir}}</v-btn>
         </v-col>
       </v-row>
       <v-tabs v-model="tab" background-color="transparent" grow>
-        <v-tab v-for="(item,key) in items" :key="key">
+        <v-tab v-for="(item,key) in items" :key="item.tab">
           {{ key }}
         </v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <list-posts :user="$route.params.user"></list-posts>
+          <list-posts :user="user"></list-posts>
         </v-tab-item>
       </v-tabs-items>
-
     </div>
-    <v-dialog fullscreen v-model="modalEditProfile" class="mb-6">
-      <v-card>
-        <v-card-title class="text-center">
-          <v-btn icon>
-            <v-icon @click="modalEditProfile = false">mdi-arrow-left</v-icon>
-          </v-btn>
-          Tu perfil
-        </v-card-title>
-        <v-card-text>
-        <v-row no-gutters>
-            <v-col class="col-12">
-                <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="initialImage" ></drag-and-drop-photo-card>
-            </v-col>
-            <v-col class="col-12">
-                <v-text-field outlined required label="Nombre de usuario" type="text" v-model="profile.username"></v-text-field>
-            </v-col>
-            <v-col class="col-12">
-                <v-text-field outlined required label="Email" type="email" v-model="profile.email"></v-text-field>
-            </v-col>
-            <v-col class="col-12">
-                <v-text-field outlined required label="Telefono" type="number"  v-model="profile.phone"></v-text-field>
-            </v-col>
-            <v-col class="col-12 d-flex">
-              <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="success" @click="saveProfile()">Guardar</v-btn>
-            </v-col>
-        </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-snackbar
-      v-model="showSnackbar"
-      timeout="1000"
-    >
-    {{ snackbarMessage }}
-  </v-snackbar>
-  <!-- Info post -->
+    
 </v-container>
 </template>
 
 <script>
+    import PostCard from "~/components/PostCard.vue"
     import DragAndDropPhotoCard from '~/components/DragAndDropPhotoCard.vue'
-    import PostDetailsDialog from '~/components/PostDetailsDialog.vue'
     import ListPosts from '~/components/ListPosts.vue'
 
     export default {
@@ -82,7 +45,9 @@
         data() {
             return {
                 tab: null,
-                modalEditProfile: false,
+                user: this.$route.params.user,
+                publications: [],
+                modalComments: false,
                 profile: {
                     profile_picture: {}
                 },
@@ -95,14 +60,19 @@
                         extra: "Extra extraaa"
                     }
                 },
-                showSnackbar: false,
-                snackbarMessage: "Perfil actualizado",
+                publication: {
+                    user: {},
+                    imagen_principal: {}
+                },
+                comentario: {},
                 seguidores: 0,
                 seguidos: 0,
-
+                seguirODejarSeguir: "-",
+                idSeguidor: 0
             }
         },
         created() {
+            this.getPosts()
             this.getUser()
             this.getSeguidos()
             this.getSeguidores()
@@ -113,68 +83,88 @@
             }
         },
         methods: {
-            setProfilePicture(file) {
-                //File
-                this.profile_picture.file = file
-                    //URL
-                var reader = new FileReader()
+            async followUnfollow() {
+                if (this.seguirODejarSeguir == "Unfollow") {
+                    await this.$axios.delete('/seguidor-seguidos/' + this.idSeguidor)
+                    this.seguidores--
+                        this.seguirODejarSeguir = "Follow"
+                } else {
+                    var body = {
+                        seguidor: this.$auth.user.id,
+                        seguido: this.user
+                    }
+                    await this.$axios.post('/seguidor-seguidos/', body)
+                    this.seguidores++
+                        this.seguirODejarSeguir = "Unfollow"
 
-                reader.onload = (e) => {
-                    this.profile_picture.url = e.target.result
-                };
-                reader.readAsDataURL(file)
+                }
+
+
             },
             async getSeguidos() {
                 //Obtener a las personas que sigo
-                var response = await this.$axios.get(`/seguidor-seguidos/?seguidor=${this.$auth.user.id}`)
+                var response = await this.$axios.get(`/seguidor-seguidos/?seguidor=${this.user}`)
                 this.seguidos = response.data.length
+
             },
             async getSeguidores() {
-                var response = await this.$axios.get(`/seguidor-seguidos/?seguido=${this.$auth.user.id}`)
+                var response = await this.$axios.get(`/seguidor-seguidos/?seguido=${this.user}`)
                 this.seguidores = response.data.length
+                var found = response.data.find(
+                    element => {
+                        console.log(element)
+                        if (element.seguidor.id == this.$auth.user.id) {
+
+                            this.idSeguidor = element.id
+                            return true
+                        }
+                    }
+                )
+                if (found) {
+                    this.seguirODejarSeguir = "Unfollow"
+                } else {
+                    this.seguirODejarSeguir = "Follow"
+                }
+
             },
             async getUser() {
 
-                await this.$axios.get(`/users/${this.$auth.user.id}/`)
+                await this.$axios.get(`/users/${this.user}/`)
                     .then((data) => {
                         this.profile = data.data
 
                     })
             },
-            async saveProfile() {
-                this.$delete(this.profile, "profil_picture")
-                await this.$axios.put(`/users/${this.$auth.user.id}/`, this.profile).catch((error) => console.log(error))
-
-                let profilePicture = new FormData()
-                profilePicture.append('field', 'profile_picture')
-                profilePicture.append('files', this.profile_picture.file)
-                profilePicture.append('source', 'users-permissions');
-                profilePicture.append('ref', 'user')
-                profilePicture.append('refId', this.$auth.user.id)
-                await this.$axios.post('/upload', profilePicture, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).catch((error) => {
-                    this.closeModalPerfil(error.message)
-                })
-                this.closeModalPerfil("")
-                await this.getUser()
-                    //this.$root.$emit('resetPosts')
+            async getPublication(publication) {
+                this.modalComments = true
+                this.publication = publication
+                await this.$axios.get('/comentarios/?publicacion=' + publication.id, this.comentario)
+                    .then((data) => {
+                        this.publication.comentarios = data.data
+                        this.$forceUpdate()
+                    })
             },
-            closeModalPerfil(messageError) {
-                this.modalEditProfile = false
-                this.showSnackbar = true
-                if (messageError != "")
-                    this.snackbarMessage = messageError
-                this.getUser()
-                this.$forceUpdate()
+            async getPosts() {
+                await this.$axios.get(`/publicaciones/?user=${this.user}`)
+                    .then((data) => {
+                        this.publications = data.data
+                    })
+            },
+            addComment() {
+                this.comentario.publicacion = this.publication.id
+                this.comentario.user = this.$auth.user.id
+                this.$axios.post('/comentarios/', this.comentario)
+                    .then((data) => {
+                        this.publication.comentarios.push(data.data)
+                        this.$forceUpdate()
+                        this.comentario = {}
+                    })
             },
         },
         components: {
+            PostCard,
             DragAndDropPhotoCard,
-            PostDetailsDialog,
-            ListPosts,
+            ListPosts
         }
     }
 </script>

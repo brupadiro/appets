@@ -40,7 +40,7 @@
                 },
                 comentario: {},
                 start_publicaciones: 0,
-                limit_publicaciones: 1,
+                limit_publicaciones: 12,
                 theres_more_publications: true,
                 showPostDetailsDialog: false,
                 loading: true,

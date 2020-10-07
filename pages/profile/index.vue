@@ -2,7 +2,7 @@
   <v-container class="pa-0">
     <div class="blue-grey lighten-5">
       <v-row class="pt-5" no-gutters>
-        <v-col class="col-4 d-flex flex-column justify-center align-center">
+        <v-col class="col-4 d-flex flex-column justify-center align-center" @click="showListSeguidores">
           <p class="font-weight-black">{{seguidores}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidores</span>
         </v-col>
@@ -13,11 +13,11 @@
           </v-avatar>
         </v-col>
 
-        <v-col class="col-4 d-flex flex-column justify-center align-center">
+        <v-col class="col-4 d-flex flex-column justify-center align-center" @click="showListSeguidos">
           <p class="font-weight-black">{{seguidos}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidos</span>
         </v-col>
-        <v-col class="col-12 d-flex flex-column justify-center align-center">
+        <v-col class="col-12 d-flex flex-column justify-center align-center" >
           <v-btn rounded outlined class="mt-3" @click="modalEditProfile = true">Editar perfil</v-btn>
         </v-col>
       </v-row>
@@ -69,6 +69,15 @@
     {{ snackbarMessage }}
   </v-snackbar>
   <!-- Info post -->
+  <!-- Lista de seguidores -->
+  <list-seguidores-seguidos 
+  :showListSeguidoresSeguidos="showListSeguidoresSeguidos" 
+  :seguidores="list_seguidores" 
+  :seguidos="list_seguidos" 
+  @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false" 
+  :show_seguidores="show_seguidores"
+  >
+  </list-seguidores-seguidos>
 </v-container>
 </template>
 
@@ -76,6 +85,7 @@
     import DragAndDropPhotoCard from '~/components/DragAndDropPhotoCard.vue'
     import PostDetailsDialog from '~/components/PostDetailsDialog.vue'
     import ListPosts from '~/components/ListPosts.vue'
+    import ListSeguidoresSeguidos from '~/components/ListSeguidoresSeguidos.vue'
 
     export default {
         layout: 'profile',
@@ -99,6 +109,10 @@
                 snackbarMessage: "Perfil actualizado",
                 seguidores: 0,
                 seguidos: 0,
+                showListSeguidoresSeguidos: false,
+                list_seguidores: [],
+                list_seguidos: [],
+                show_seguidores: false,
 
             }
         },
@@ -127,11 +141,16 @@
             async getSeguidos() {
                 //Obtener a las personas que sigo
                 var response = await this.$axios.get(`/seguidor-seguidos/?seguidor=${this.$auth.user.id}`)
+                this.list_seguidos = response.data
                 this.seguidos = response.data.length
+                this.show_seguidores = false
             },
             async getSeguidores() {
+                //Las perosnas que me siguen
                 var response = await this.$axios.get(`/seguidor-seguidos/?seguido=${this.$auth.user.id}`)
+                this.list_seguidores = response.data
                 this.seguidores = response.data.length
+                this.show_seguidores = true
             },
             async getUser() {
 
@@ -160,7 +179,6 @@
                 })
                 this.closeModalPerfil("")
                 await this.getUser()
-                    //this.$root.$emit('resetPosts')
             },
             closeModalPerfil(messageError) {
                 this.modalEditProfile = false
@@ -170,11 +188,20 @@
                 this.getUser()
                 this.$forceUpdate()
             },
+            showListSeguidos() {
+                this.show_seguidores = false;
+                this.showListSeguidoresSeguidos = true;
+            },
+            showListSeguidores() {
+                this.show_seguidores = true;
+                this.showListSeguidoresSeguidos = true;
+            }
         },
         components: {
             DragAndDropPhotoCard,
             PostDetailsDialog,
             ListPosts,
+            ListSeguidoresSeguidos
         }
     }
 </script>
