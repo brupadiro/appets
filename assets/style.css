@@ -27,3 +27,6 @@
 .container-disconected input {
     color: white !important;
   }
+.primary{
+      background: linear-gradient(#00b8ad,#059d94)!important;
+}

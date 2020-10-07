@@ -16,12 +16,11 @@
         <div class="pa-4 lista_de_productos">
             <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts"><v-icon>mdi-refresh</v-icon></v-btn>
             <v-row v-if="productos.length != 0" >
-                <v-col class="col-6" v-for="(producto,index) in productos" >
-                    <producto-large 
+                <v-col class="col-6" v-for="(producto,index) in productos"  :key="index">
+                    <producto 
                     :producto="producto" 
-                    :key="index" 
                     class="mb-5"
-                    ></producto-large>
+                    ></producto>
                 </v-col>
             </v-row>
             <div class="d-flex flex-column justify-center align-center text-center" v-else>
@@ -37,7 +36,7 @@
 </template>
 
 <script>
-    import productoLarge from "../components/productoLarge.vue"
+    import producto from "~/components/productoLarge.vue"
     export default {
         layout: 'productos',
         data() {
@@ -96,7 +95,7 @@
             }
         },
         components: {
-            productoLarge,
+            producto,
         }
     }
 </script>

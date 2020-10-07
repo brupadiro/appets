@@ -14,7 +14,6 @@
             <h2 class="blue-grey--text lighten-5 mt-10">No se encontraron publicaciones</h2>
         </div>
         <post-card v-for="(publication,index) in publications" :key="index" :publication="publication" @showpublication="getPublication($event)"></post-card>
-        <v-btn color="success" @click="getMorePulications" v-show="theres_more_publications" >more posts</v-btn>
         <post-details-dialog :showPostDetailsDialog="showPostDetailsDialog" :publication="publication" @closePostDetailsDialog="closePostDetailsDialog" @changeLike="changeLike"></post-details-dialog>
 
     </div>

@@ -19,7 +19,7 @@
         </div>
         <v-card class="mb-2 elevation-5 rounded-lg" v-for="pet in pets" :key="pet.id" >
           <v-card-title primary-title >
-            <v-avatar class="mr-2" >
+            <v-avatar class="mr-2" v-if="pet.profile_picture">
               <img :src="$axios.defaults.baseURL + pet.profile_picture.url" alt="my_pet_figure">
             </v-avatar>
             <div class="d-flex flex-column">
@@ -31,7 +31,6 @@
               height="100"></v-img>
           </div>
           <v-card-actions>
-            <v-btn text color="red">Reportar perdido</v-btn>
             <v-spacer></v-spacer>
             <v-btn text color="info" :nuxt="true" :to="`myPets/map/${pet.id}`">Ver en el mapa</v-btn>
           </v-card-actions>
