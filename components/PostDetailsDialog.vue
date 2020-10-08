@@ -10,8 +10,9 @@
             <div class="white pa-1">
               <v-list-item class="grow pa-0">
                 <v-list-item-avatar v-if="publication.imagen_principal!=null">
-                  <v-img class="elevation-6" contain :src="$axios.defaults.baseURL + publication.imagen_principal.url"
-                    aspect-ratio="2" round></v-img>
+                  <v-img class="elevation-6" contain :src="$axios.defaults.baseURL + imgUserPublicacion"
+                    aspect-ratio="2" round>
+                  </v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{publication.user.username}}</v-list-item-title>
@@ -87,17 +88,10 @@
         props: {
             showPostDetailsDialog: false,
             publication: {
-                type: Object,
-                default: {
-                    user: {
-                        profile_picture: {
-                            url: ''
-                        }
-                    },
-                    imagen_principal: {},
-                    comentarios: [],
-                    likes: [],
-                }
+                user: {},
+                imagen_principal: {},
+                comentarios: [],
+                likes: [],
             },
         },
         data() {
@@ -127,6 +121,11 @@
                             this.theres_more_comments = false
                         }
                     })
+            }
+        },
+        computed: {
+            imgUserPublicacion() {
+                return (this.publication.user.profile_picture == undefined) ? '' : this.publication.user.profile_picture.url
             }
         },
         methods: {

@@ -51,41 +51,39 @@
 </template>
 
 <script>
-  export default {
-    layout: 'simpleWithBackButton',
-    data() {
-      return {
-        producto: {
-          img_principal: [{
-            url: ""
-          }]
+    export default {
+        layout: 'simpleWithBackButton',
+        data() {
+            return {
+                producto: {
+                    img_principal: [{
+                        url: ""
+                    }]
+                },
+                rating: 3,
+            }
         },
-        rating: 3,
-      }
-    },
-    created() {
-      this.getProduct()
-    },
-    methods: {
-      getProduct(){
-        this.$axios.get('/productos/' + this.$route.params.id).then((response) => this.producto = response.data)
-      },
-      saveProduct(){
-        let data = {
-          user:this.$auth.user.id,
-          producto:this.$route.params.id
+        created() {
+            this.getProduct()
+        },
+        methods: {
+            getProduct() {
+                this.$axios.get('/productos/' + this.$route.params.id).then((response) => this.producto = response.data)
+            },
+            saveProduct() {
+                let data = {
+                    user: this.$auth.user.id,
+                    producto: this.$route.params.id
+                }
+                this.$axios.post('/orden-ventas/', data)
+            }
         }
-        this.$axios.post('/orden-ventas/',data)
-      }
     }
-  }
-
 </script>
 
 <style>
-  .medium-background {
-    width: 100%;
-    background: #00b8ad;
-  }
-
+    .medium-background {
+        width: 100%;
+        background: #00b8ad;
+    }
 </style>

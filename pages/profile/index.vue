@@ -161,8 +161,15 @@
                     })
             },
             async saveProfile() {
-                this.$delete(this.profile, "profil_picture")
+                //this.$delete(this.profile, "profile_picture")
                 await this.$axios.put(`/users/${this.$auth.user.id}/`, this.profile).catch((error) => console.log(error))
+
+                var hayArchivo = this.profile_picture.file instanceof File
+                if (!hayArchivo) {
+                    this.closeModalPerfil("")
+                    await this.getUser()
+                    return
+                }
 
                 let profilePicture = new FormData()
                 profilePicture.append('field', 'profile_picture')

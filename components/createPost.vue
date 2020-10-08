@@ -32,7 +32,9 @@
         },
         data() {
             return {
-                publicacion: {}
+                publicacion: {
+                    contenido: ''
+                }
             }
         },
         methods: {
@@ -50,6 +52,10 @@
 
             },
             createPublication() {
+
+                if (this.publicacion.contenido == '')
+                    return;
+
                 const data = new FormData()
                 data.append('data', JSON.stringify({
                     "contenido": this.publicacion.contenido,

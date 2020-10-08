@@ -13,7 +13,8 @@
       </v-list-item>
     </v-card-title>
     <v-card-text>
-      {{publication.contenido}}
+      {{publicationContenido}}
+      <span v-show="ver_mas" class="text--primary" @click="$emit('showpublication',publication)" > ver mas</span>
     </v-card-text>
     <v-img aspect-ratio="2" contain v-if="publication.imagen_principal!=null"
       :src="$axios.defaults.baseURL + publication.imagen_principal.url">
@@ -46,6 +47,7 @@
         data() {
             return {
                 like: false,
+                ver_mas: false
             }
         },
         mounted() {
@@ -65,6 +67,18 @@
             }
         },
         computed: {
+            publicationContenido() {
+                if (this.publication.contenido == undefined)
+                    return
+
+                if (this.publication.contenido.length > 150) {
+                    this.ver_mas = true
+                    return this.publication.contenido.slice(0, 150) + ' ...'
+                }
+
+
+                return this.publication.contenido
+            },
             likeId: {
                 get() {
                     var details = this.publication.likes.find(element => element.user_id == this.$auth.user.id)
