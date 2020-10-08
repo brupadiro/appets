@@ -43,6 +43,35 @@ module.exports = {
         );
     },
 
+    async findPublicaciones(ctx) {
+        const { id } = ctx.params
+        let seguidos = await strapi.query('seguidor-seguido').find({ seguidor: id })
+        seguidos = seguidos.map((seguido)=>{
+            return seguido.seguido.id
+        }) 
+
+        let publicaciones = await strapi.query('publicaciones').find({ user: seguidos })
+        return Promise.all(
+            publicaciones.map(async entity => {
+                sanitizeEntity(entity, { model: strapi.models.publicaciones })
+                    //lista de likes
+                let likes = await strapi.query('likes').find({ publicacion: entity.id })
+                entity.likes = likes.map(element => {
+                    // mostrar solo el id del usuario y el username
+                    return {
+                        like_id: element.id,
+                        user_id: element.user.id,
+                        username: element.user.username
+                    }
+                })
+                let comentarios = await strapi.query('comentarios').find({ publicacion: entity.id })
+                entity.comentarios_cant = comentarios.length
+                return entity
+            })
+        );
+    },
+
+
     async findOne(ctx) {
         const { id } = ctx.params
         const entity = await strapi.services.publicaciones.findOne({ id })
@@ -70,6 +99,25 @@ module.exports = {
         entity['likes'] = []
         return sanitizeEntity(entity, { model: strapi.models.publicaciones })
 
+    },
+    async likesAndComents(publicaciones){
+        Promise.all(
+            publicaciones.map(async entity => {
+                sanitizeEntity(entity, { model: strapi.models.publicaciones })
+                    //lista de likes
+                let likes = await strapi.query('likes').find({ publicacion: entity.id })
+                entity.likes = likes.map(element => {
+                    // mostrar solo el id del usuario y el username
+                    return {
+                        like_id: element.id,
+                        user_id: element.user.id,
+                        username: element.user.username
+                    }
+                })
+                let comentarios = await strapi.query('comentarios').find({ publicacion: entity.id })
+                entity.comentarios_cant = comentarios.length
+                return entity
+            })
+        );
     }
-
 };
