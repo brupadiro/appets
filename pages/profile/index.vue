@@ -8,7 +8,8 @@
         </v-col>
         <v-col class="col-4 text-center">
           <v-avatar color="teal" size="100">
-            <v-img v-if="profile.profile_picture.url" :src="$axios.defaults.baseURL + profile.profile_picture.url"></v-img>
+            <v-img v-if="profile.profile_picture.url" :src="$axios.defaults.baseURL + profile.profile_picture.url">
+            </v-img>
             <v-icon v-else size="100">mdi-account-circle-outline</v-icon>
           </v-avatar>
         </v-col>
@@ -17,7 +18,7 @@
           <p class="font-weight-black">{{seguidos}}</p>
           <span class="font-weight-black" color="grey lighten-5">Seguidos</span>
         </v-col>
-        <v-col class="col-12 d-flex flex-column justify-center align-center" >
+        <v-col class="col-12 d-flex flex-column justify-center align-center">
           <v-btn rounded outlined class="mt-3" @click="modalEditProfile = true">Editar perfil</v-btn>
         </v-col>
       </v-row>
@@ -28,7 +29,7 @@
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <list-posts :user="$auth.user.id"></list-posts>
+          <list-posts v-model="publications"></list-posts>
         </v-tab-item>
       </v-tabs-items>
 
@@ -42,43 +43,39 @@
           Tu perfil
         </v-card-title>
         <v-card-text>
-        <v-row no-gutters>
+          <v-row no-gutters>
             <v-col class="col-12">
-                <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="initialImage" ></drag-and-drop-photo-card>
+              <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="initialImage">
+              </drag-and-drop-photo-card>
             </v-col>
             <v-col class="col-12">
-                <v-text-field outlined required label="Nombre de usuario" type="text" v-model="profile.username"></v-text-field>
+              <v-text-field outlined required label="Nombre de usuario" type="text" v-model="profile.username">
+              </v-text-field>
             </v-col>
             <v-col class="col-12">
-                <v-text-field outlined required label="Email" type="email" v-model="profile.email"></v-text-field>
+              <v-text-field outlined required label="Email" type="email" v-model="profile.email"></v-text-field>
             </v-col>
             <v-col class="col-12">
-                <v-text-field outlined required label="Telefono" type="number"  v-model="profile.phone"></v-text-field>
+              <v-text-field outlined required label="Telefono" type="number" v-model="profile.phone"></v-text-field>
             </v-col>
             <v-col class="col-12 d-flex">
-              <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="success" @click="saveProfile()">Guardar</v-btn>
+              <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="success"
+                @click="saveProfile()">Guardar</v-btn>
             </v-col>
-        </v-row>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="showSnackbar"
-      timeout="1000"
-    >
-    {{ snackbarMessage }}
-  </v-snackbar>
-  <!-- Info post -->
-  <!-- Lista de seguidores -->
-  <list-seguidores-seguidos 
-  :showListSeguidoresSeguidos="showListSeguidoresSeguidos" 
-  :seguidores="list_seguidores" 
-  :seguidos="list_seguidos" 
-  @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false" 
-  :show_seguidores="show_seguidores"
-  >
-  </list-seguidores-seguidos>
-</v-container>
+    <v-snackbar v-model="showSnackbar" timeout="1000">
+      {{ snackbarMessage }}
+    </v-snackbar>
+    <!-- Info post -->
+    <!-- Lista de seguidores -->
+    <list-seguidores-seguidos :showListSeguidoresSeguidos="showListSeguidoresSeguidos" :seguidores="list_seguidores"
+      :seguidos="list_seguidos" @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false"
+      :show_seguidores="show_seguidores">
+    </list-seguidores-seguidos>
+  </v-container>
 </template>
 
 <script>
@@ -96,6 +93,7 @@
                 profile: {
                     profile_picture: {}
                 },
+                publications: [],
                 profile_picture: {
                     file: {},
                     url: ""
@@ -113,6 +111,8 @@
                 list_seguidores: [],
                 list_seguidos: [],
                 show_seguidores: false,
+                start_publicaciones: 0,
+                limit_publicaciones: 12,
 
             }
         },
@@ -120,13 +120,19 @@
             this.getUser()
             this.getSeguidos()
             this.getSeguidores()
-        },
-        computed: {
-            initialImage() {
-                return (this.profile_picture.url == '') ? this.$axios.defaults.baseURL + this.profile.profile_picture.url : this.profile_picture.url
-            }
+            this.getPosts()
         },
         methods: {
+            async getPosts() {
+                this.publications = []
+                var url =
+                    `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
+                await this.$axios.get(url)
+                    .then((data) => {
+                        this.publications = data.data
+                        this.loading = false
+                    })
+            },
             setProfilePicture(file) {
                 //File
                 this.profile_picture.file = file
@@ -202,6 +208,12 @@
             showListSeguidores() {
                 this.show_seguidores = true;
                 this.showListSeguidoresSeguidos = true;
+            }
+        },
+        computed: {
+            initialImage() {
+                return (this.profile_picture.url == '') ? this.$axios.defaults.baseURL + this.profile.profile_picture.url : this
+                    .profile_picture.url
             }
         },
         components: {

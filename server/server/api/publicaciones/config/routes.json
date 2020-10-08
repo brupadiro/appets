@@ -18,6 +18,14 @@
     },
     {
       "method": "GET",
+      "path": "/publicaciones/findPublicaciones/:id",
+      "handler": "publicaciones.findPublicaciones",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/publicaciones/:id",
       "handler": "publicaciones.findOne",
       "config": {

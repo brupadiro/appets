@@ -20,7 +20,7 @@
         <div class="div-price">
           <h4 class="font-weight-bold">$&nbsp;<span class="font-weight-medium-lg">{{producto.precio}}</span></h4>
           <v-btn  color="primary" width="35" height="35" fab>
-            <v-icon color="white" @click="showProductoDetails">mdi-cart-plus</v-icon>
+            <v-icon color="white">mdi-cart-plus</v-icon>
           </v-btn>
         </div>
       </v-col>
@@ -34,9 +34,6 @@
       producto: Object
     },
     methods: {
-      showProductoDetails() {
-        this.$router.push('/producto/' + this.producto.id)
-      }
     }
   }
 
