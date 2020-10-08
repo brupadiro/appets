@@ -46,9 +46,9 @@ module.exports = {
     async findPublicaciones(ctx) {
         const { id } = ctx.params
         let seguidos = await strapi.query('seguidor-seguido').find({ seguidor: id })
-        seguidos = seguidos.map((seguido)=>{
+        seguidos = seguidos.map((seguido) => {
             return seguido.seguido.id
-        }) 
+        })
 
         let publicaciones = await strapi.query('publicaciones').find({ user: seguidos })
         return Promise.all(
@@ -100,7 +100,7 @@ module.exports = {
         return sanitizeEntity(entity, { model: strapi.models.publicaciones })
 
     },
-    async likesAndComents(publicaciones){
+    async likesAndComents(publicaciones) {
         Promise.all(
             publicaciones.map(async entity => {
                 sanitizeEntity(entity, { model: strapi.models.publicaciones })

@@ -1,15 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col class="col-6 col-md-6">
-        <v-btn rounded @click.native="followersPublications=false" depressed :color="(followersPublications)?'':'primary'">GENERAL</v-btn>
-      </v-col>
-      <v-col class="col-6 col-md-6">
-          <v-btn rounded @click.native="followersPublications=true" depressed :color="(!followersPublications)?'':'primary'">SEGUIDOS</v-btn>
-      </v-col>
-    </v-row>
-    <list-posts v-model="publications"></list-posts>
-  </v-container>
+    <list-posts showOptionsHomeSeguidores ></list-posts>
+</v-container>
 </template>
 
 <script>
