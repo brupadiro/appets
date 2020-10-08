@@ -23,24 +23,7 @@ module.exports = {
             entities = await strapi.services.publicaciones.find(ctx.query);
         }
 
-        return Promise.all(
-            entities.map(async entity => {
-                sanitizeEntity(entity, { model: strapi.models.publicaciones })
-                    //lista de likes
-                let likes = await strapi.query('likes').find({ publicacion: entity.id })
-                entity.likes = likes.map(element => {
-                    // mostrar solo el id del usuario y el username
-                    return {
-                        like_id: element.id,
-                        user_id: element.user.id,
-                        username: element.user.username
-                    }
-                })
-                let comentarios = await strapi.query('comentarios').find({ publicacion: entity.id })
-                entity.comentarios_cant = comentarios.length
-                return entity
-            })
-        );
+        return entities
     },
 
     async findPublicaciones(ctx) {

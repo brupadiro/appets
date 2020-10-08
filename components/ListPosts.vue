@@ -4,7 +4,7 @@
             <v-col class="col-6 col-md-6">
               <v-btn rounded @click.native="followersPublications=false" depressed :color="(followersPublications)?'':'primary'">GENERAL</v-btn>
             </v-col>
-            <v-col class="col-6 col-md-6">
+            <v-col class="col-6 col-md-6 text-right">
                 <v-btn rounded @click.native="followersPublications=true" depressed :color="(!followersPublications)?'':'primary'">SEGUIDOS</v-btn>
             </v-col>
         </v-row>
@@ -65,6 +65,8 @@
         watch: {
             followersPublications(newVal, oldVal) {
                 this.loading = true
+                this.start_publicaciones = 0
+                theres_more_publications = true
                 this.getPosts().then((reponse) => this.loading = false)
             }
         },
@@ -168,77 +170,6 @@
         },
         components: {
             PostCard
-        }
-
-        this.newPublications.push(newPublication)
-    })
-    },
-    methods: {
-            async getPublication(publication) {
-                this.publication = publication
-                this.showPostDetailsDialog = true
-            },
-            closePostDetailsDialog() {
-                this.showPostDetailsDialog = false
-            },
-            async changeLike(isNewLike) {
-                if (isNewLike) {
-
-                    /**
-                     * Agregar nuevo like a la DB
-                     */
-
-                    let body = {
-                        user: this.$auth.user.id,
-                        publicacion: this.publication.id
-                    }
-
-                    var response = await this.$axios.post('/likes/', body).catch((error) => {
-                        console.error(error)
-                        return;
-                    })
-                    var likeData = response.data
-                        // Agregar este nuevo like a la lista de likes de la publicacion y de las pulicaciones
-                    this.$set(this.publication.likes, this.publication.likes.length, {
-                        like_id: likeData.id,
-                        user_id: this.$auth.user.id,
-                        username: this.$auth.user.username
-                    })
-
-                } else {
-
-                    /**
-                     * Borrar el like de la DB
-                     * Se necesita el id del objeto like
-                     * */
-
-                    var likeObject = this.publication.likes.find(like => like.user_id == this.$auth.user.id)
-
-                    var response = await this.$axios.delete('/likes/' + likeObject.like_id).catch((error) => {
-                        console.error(error)
-                        return;
-                    })
-
-                    var likeIndex = this.publication.likes.findIndex(like => like.user_id == this.$auth.user.id)
-
-                    //Borar el like de la publicacion que se esta mostrando
-                    this.publication.likes.splice(likeIndex, 1)
-
-                }
-
-                //Notificar al post (PostCard) que la publicacion tuvo cambios
-                this.$root.$emit('changeLikePost', this.publication.id)
-
-
-            }
-        },
-        components: {
-            PostCard
-        },
-        watch: {
-            value(val) {
-                this.publications = val
-            }
         }
     }
 </script>
