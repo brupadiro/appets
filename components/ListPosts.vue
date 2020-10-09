@@ -66,7 +66,7 @@
             followersPublications(newVal, oldVal) {
                 this.loading = true
                 this.start_publicaciones = 0
-                theres_more_publications = true
+                this.theres_more_publications = true
                 this.getPosts().then((reponse) => this.loading = false)
             }
         },
@@ -84,7 +84,7 @@
         methods: {
             async getPosts() {
                 if (this.followersPublications) {
-                    var url = `/publicaciones/findPublicaciones/${this.$auth.user.id}/`
+                    var url = `/publicaciones/findPublicaciones/${this.$auth.user.id}?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
                 } else {
                     var url = (this.user != 0) ? `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}` : `/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
                 }
@@ -99,7 +99,11 @@
 
                 //Chequear que si la "nuevaPublicacion" esta en el nuevo array, hacerle pop. De lo contrario se mostrara dos veces 
                 this.start_publicaciones += this.limit_publicaciones
-                var url = (this.user != 0) ? `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}` : `/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
+                if (this.followersPublications) {
+                    var url = `/publicaciones/findPublicaciones/${this.$auth.user.id}?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
+                } else {
+                    var url = (this.user != 0) ? `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}` : `/publicaciones/?_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
+                }
                 this.$axios.get(url)
                     .then((data) => {
 

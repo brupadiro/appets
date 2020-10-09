@@ -33,7 +33,19 @@ module.exports = {
             return seguido.seguido.id
         })
 
-        let publicaciones = await strapi.query('publicaciones').find({ user: seguidos })
+        console.log(ctx.query)
+
+        var filter = {
+            user: seguidos,
+        }
+
+        if (ctx.query._start != undefined)
+            filter['_start'] = ctx.query._start
+
+        if (ctx.query._limit != undefined)
+            filter['_limit'] = ctx.query._limit
+
+        let publicaciones = await strapi.query('publicaciones').find(filter)
         return Promise.all(
             publicaciones.map(async entity => {
                 sanitizeEntity(entity, { model: strapi.models.publicaciones })
@@ -52,6 +64,7 @@ module.exports = {
                 return entity
             })
         );
+
     },
 
 
