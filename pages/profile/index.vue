@@ -29,7 +29,7 @@
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <list-posts v-model="publications"></list-posts>
+          <list-posts :user="$auth.user.id" ></list-posts>
         </v-tab-item>
       </v-tabs-items>
 
