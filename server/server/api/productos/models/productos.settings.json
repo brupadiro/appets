@@ -26,11 +26,11 @@
       "plugin": "upload",
       "required": false
     },
-    "categorias": {
-      "model": "categorias"
-    },
     "precio": {
       "type": "decimal"
+    },
+    "subcategoria": {
+      "model": "subcategoria"
     }
   }
 }

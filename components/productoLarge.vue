@@ -1,6 +1,6 @@
 <template>
 
-  <v-card v-ripple color="white" elevation="2" :to="`/productos/${producto.id}`">
+  <v-card v-ripple color="white" elevation="2" :to="goToProduct">
     <v-row no-gutters>
       <v-col class="col-12">
         <v-img :src="$axios.defaults.baseURL + producto.img_principal[0].url" width="100%" height="150" contain />
@@ -13,7 +13,7 @@
       </v-col>
       <v-col class="col-12">
         <div class="pl-2 text-truncate">
-          <p class="text-center overline mb-0">{{producto.descripcion}}</p>
+          <p class="text-center overline mb-0">{{producto.subcategoria.descripcion}}</p>
         </div>
       </v-col>
       <v-col class="col-12 d-flex justify-center mb-3">
@@ -29,27 +29,41 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      producto: Object
-    },
-    methods: {
-    }
-  }
+    export default {
+        props: {
+            producto: Object
+        },
+        methods: {},
+        computed: {
+            goToProduct() {
 
+                switch (this.producto.subcategoria.titulo) {
+                    case 'comida_de_perro':
+                    case 'comida_de_gato':
+                        return `/productos/comida/${this.producto.id}`
+                    case 'accesorio_de_perro':
+                    case 'accesorio_de_gato':
+                        return `/productos/accesorio/${this.producto.id}`
+                    default:
+                        return `/`
+                }
+            }
+        }
+    }
 </script>
 <style scoped>
-.div-price{
-    border: 2px solid #00b8ad;
-    border-radius: 50px;
-    padding: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 80%;
-}
-.divider-product{
-    height:1px;
-    background:#00b8ad;
-}
+    .div-price {
+        border: 2px solid #00b8ad;
+        border-radius: 50px;
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 80%;
+    }
+    
+    .divider-product {
+        height: 1px;
+        background: #00b8ad;
+    }
 </style>

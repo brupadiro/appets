@@ -66,7 +66,7 @@
             followersPublications(newVal, oldVal) {
                 this.loading = true
                 this.start_publicaciones = 0
-                theres_more_publications = true
+                this.theres_more_publications = true
                 this.getPosts().then((reponse) => this.loading = false)
             }
         },

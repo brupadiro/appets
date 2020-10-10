@@ -12,14 +12,14 @@
             <v-img :src="$axios.defaults.baseURL + producto.img_principal[0].url" class="mb-5">
             </v-img>
           </v-col>
-          <v-col class="col-5">
+          <v-col class="col-5 pl-2">
             <div class="mb-5">
               <h3 class="font-weight-thin white--text">Peso</h3>
-              <h3 class="font-weight-bold  white--text">150 g</h3>
+              <h3 class="font-weight-bold  white--text">{{comida.peso}}g</h3>
             </div>
             <div class="mb-5">
               <h3 class="font-weight-thin  white--text">Tipo</h3>
-              <h3 class="font-weight-bold  white--text">Adulto</h3>
+              <h3 class="font-weight-bold  white--text">{{comida.tipo}}</h3>
             </div>
             <div>
               <h3 class="font-weight-thin  white--text">Precio</h3>
@@ -55,10 +55,17 @@
         layout: 'simpleWithBackButton',
         data() {
             return {
+                comida: {
+                    peso: 0,
+                    tipo: '',
+                },
                 producto: {
                     img_principal: [{
                         url: ""
-                    }]
+                    }],
+                    nombre: '',
+                    precio: 0,
+                    descripcion: ''
                 },
                 rating: 3,
             }
@@ -68,14 +75,19 @@
         },
         methods: {
             getProduct() {
-                this.$axios.get('/productos/' + this.$route.params.id).then((response) => this.producto = response.data)
+                this.$axios.get('/comidas/?producto=' + this.$route.params.id).then((response) => {
+                    this.comida = response.data[0]
+                    console.log(this.comida)
+                    this.producto = this.comida.producto
+                })
             },
             saveProduct() {
-                let data = {
-                    user: this.$auth.user.id,
-                    producto: this.$route.params.id
-                }
-                this.$axios.post('/orden-ventas/', data)
+                this.$router.push('/productos/checkout/' + this.comida.producto.id)
+                    // let data = {
+                    //     user: this.$auth.user.id,
+                    //     producto: this.$route.params.id
+                    // }
+                    // this.$axios.post('/orden-ventas/', data)
             }
         }
     }
