@@ -1,0 +1,23 @@
+{
+    "kind": "collectionType",
+    "collectionName": "accesorio",
+    "info": {
+        "name": "Accesorios"
+    },
+    "options": {
+        "increments": true,
+        "timestamps": true
+    },
+    "attributes": {
+        "animal": {
+            "type": "enumeration",
+            "enum": [
+                "perro",
+                "gato"
+            ]
+        },
+        "producto": {
+            "model": "productos"
+        }
+    }
+}

@@ -14,12 +14,8 @@
           </v-col>
           <v-col class="col-5 pl-2">
             <div class="mb-5">
-              <h3 class="font-weight-thin white--text">Peso</h3>
-              <h3 class="font-weight-bold  white--text">{{comida.peso}}g</h3>
-            </div>
-            <div class="mb-5">
-              <h3 class="font-weight-thin  white--text">Tipo</h3>
-              <h3 class="font-weight-bold  white--text">{{comida.tipo}}</h3>
+              <h3 class="font-weight-thin white--text">Largo</h3>
+              <h3 class="font-weight-bold  white--text">60cm</h3>
             </div>
             <div>
               <h3 class="font-weight-thin  white--text">Precio</h3>
@@ -55,7 +51,7 @@
         layout: 'simpleWithBackButton',
         data() {
             return {
-                comida: {
+                accesorio: {
                     peso: 0,
                     tipo: '',
                 },
@@ -75,19 +71,14 @@
         },
         methods: {
             getProduct() {
-                this.$axios.get('/comidas/?producto=' + this.$route.params.id).then((response) => {
-                    this.comida = response.data[0]
-                    this.producto = this.comida.producto
+                this.$axios.get('/accesorio/?producto=' + this.$route.params.id).then((response) => {
+                    this.accesorio = response.data[0]
+                    this.producto = this.accesorio.producto
                 })
             },
             saveProduct() {
                 var to = `/productos/checkout/${this.producto.subcategoria}/${this.producto.id}`
                 this.$router.push(to)
-                    // let data = {
-                    //     user: this.$auth.user.id,
-                    //     producto: this.$route.params.id
-                    // }
-                    // this.$axios.post('/orden-ventas/', data)
             }
         }
     }

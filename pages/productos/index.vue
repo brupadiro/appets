@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import producto from "~/components/productoLarge.vue"
+    import producto from "~/components/ProductoCard.vue"
     export default {
         layout: 'productos',
         data() {

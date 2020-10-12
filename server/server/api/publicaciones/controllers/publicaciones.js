@@ -33,10 +33,8 @@ module.exports = {
             return seguido.seguido.id
         })
 
-        console.log(ctx.query)
-
         var filter = {
-            user: seguidos,
+            user_in: seguidos,
         }
 
         if (ctx.query._start != undefined)
