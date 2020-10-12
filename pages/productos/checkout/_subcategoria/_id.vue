@@ -45,23 +45,25 @@
             subcategoriaComida() {
                 switch (this.$route.params.subcategoria) {
                     // Esto se va mas adelante - strapi trae objetos nested en dos niveles. Despues trae el id no mas
-                    case '1': //Comida para perro
-                    case '3': //Comida para gato
+                    case 'comida-para-perro': //Comida para perro
+                    case 'comida-para-gato': //Comida para gato
                         return true
                     default:
                         return false
                 }
             },
             subcategoriaAccesorio() {
-                console.log(typeof this.$route.params.subcategoria)
                 switch (this.$route.params.subcategoria) {
                     // Esto se va mas adelante - strapi trae objetos nested en dos niveles. Despues trae el id no mas
-                    case '2': //Accesorio para perros
-                    case '4': //Accesorio para gatos
+                    case 'accesorios-para-perros': //Accesorio para perros
+                    case 'accesorios-para-gatos': //Accesorio para gatos
                         return true
                     default:
                         return false
                 }
+            },
+            subcategoriaServicio() {
+                return (this.$route.params.subcategoria == 'servicios')
             }
         },
         methods: {

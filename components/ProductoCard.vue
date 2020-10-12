@@ -37,12 +37,12 @@
         computed: {
             goToProduct() {
 
-                switch (this.producto.subcategoria.titulo) {
-                    case 'comida_para_perro':
-                    case 'comida_para_gato':
+                switch (this.producto.subcategoria.slug) {
+                    case 'comida-para-perro':
+                    case 'comida-para-gato':
                         return `/productos/comida/${this.producto.id}`
-                    case 'accesorios_para_perros':
-                    case 'accesorios_para_gatos':
+                    case 'accesorios-para-perros':
+                    case 'accesorios-para-gatos':
                         return `/productos/accesorio/${this.producto.id}`
                     default:
                         return `/`
