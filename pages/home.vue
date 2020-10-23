@@ -1,33 +1,57 @@
 <template>
-  <v-container d-flex align-center class="container-disconected pa-0">
-    <v-row no-gutters class="fill-height align-content-space-around d-flex">
-      <v-col class="col-12">
-          <v-img class="ma-auto" src="/logo-completo.png" width="300px"></v-img>
-      </v-col>
-      <v-col class="col-12 pa-3">
-        <v-btn x-large style="width:100%" depressed rounded class="white--text font-weight-bold mb-3" to="/registro" color="success">REGISTRATE</v-btn>
-        <v-btn x-large style="width:100%" outlined rounded class="white--text font-weight-bold" to="/login" color="success">INICIA SESION</v-btn>
-      </v-col>
-    </v-row>
+  <v-container d-flex align-center class="container-disconected pa-0 fill-height" >
+    <v-img :src="login" >
+      <v-img :src="logo" class="mb100"></v-img>
+      <div class="d-flex flex-column pa-5">
+         <v-btn
+         rounded
+         large
+         depressed
+         color="verde_suave"
+         @click="$router.push('/login')"
+         class="font-weight-bold ma-3"
+       >
+         Iniciar sesion                      
+       </v-btn>  
+       <v-btn
+           rounded
+           large
+           depressed
+           color="verde_fuerte"
+           @click="$router.push('/registro')"
+           class="white--text font-weight-bold ma-3"
+         >
+         Crear cuenta
+         </v-btn>   
+      </div>
+ </v-img>
   </v-container>
 </template>
 
 
 <script>
-  import axios from 'axios';
-  export default {
-    layout: 'disconected',
-  }
-
+    import axios from 'axios';
+    export default {
+        layout: 'disconected',
+        data() {
+            return {
+                login: require('@/assets/login.png'),
+                logo: require('@/assets/logo.png'),
+            }
+        }
+    }
 </script>
 
 <style scoped>
-  .fill-height {
-    height: 100vh;
-  }
-
-  .column {
-    height: 40vh;
-  }
-
+    .fill-height {
+        height: 100vh;
+    }
+    
+    .column {
+        height: 40vh;
+    }
+    
+    .mb100 {
+        margin-bottom: 100%;
+    }
 </style>

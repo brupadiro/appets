@@ -39,6 +39,7 @@ export default {
      */
     plugins: [
         '~/plugins/maps.js',
+        '~/plugins/google-signin.js'
     ],
     /*
      ** Auto import components
@@ -87,8 +88,8 @@ export default {
             }
         },
         redirect: {
-            login: "/login",
-            logout: "/login",
+            login: "/bienvenido",
+            logout: "/bienvenido",
             user: "/"
         }
     },
@@ -108,6 +109,8 @@ export default {
                 light: {
                     primary: "#00b8ad",
                     primary_obscure: "#019c93",
+                    verde_suave: "#d2ff44",
+                    verde_fuerte: "#5eb14e",
                     secondary: "#ff1865",
                     accent: "#ff1865",
                     info: colors.teal.lighten1,
