@@ -1,31 +1,77 @@
 <template>
-  <v-container fill-height class="container-disconected">
-    <v-row no-gutters class="fill-height align-content-space-around d-flex">
-      <v-col class="col-12 col-md-12">
-        <v-btn icon color="white"  to="/home">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
+  <v-container class="pa-0">
+    <v-row no-gutters class="align-content-space-around d-flex">
+      <!-- Crear cuetna -->
+      <v-col class="col-12 col-md-12 mb-3 verde_suave text-center pa-5">
+          <h3 class="verde_fuerte--text">CREAR CUENTA NUEVA</h3>
       </v-col>
-      <v-col class="col-12">
+      <!-- ==== -->
+      <v-col class="col-12 pr-5 pl-5">
         <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)"></drag-and-drop-photo-card>
-        <v-text-field outlined required label="Nombre de usuario" color="white" type="text" v-model="profile.username">
+        <v-text-field required label="Nombre completo" color="white" type="text" v-model="profile.username">
         </v-text-field>
-        <v-text-field outlined required label="Email" type="email" color="white" v-model="profile.email"></v-text-field>
-        <v-text-field outlined required label="Telefono" type="number" color="white" v-model="profile.phone"></v-text-field>
+        <v-text-field required label="Email" type="email" color="white" v-model="profile.email"></v-text-field>
+        <!-- <v-text-field required label="Telefono" type="number" color="white" v-model="profile.phone"></v-text-field> -->
         <v-text-field 
-          outlined 
+        required 
+        label="Password" 
+        placeholder="Password"
+        color="white" 
+        :type="showPassword ? 'text' : 'password'"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showPassword = !showPassword"
+        v-model="profile.password">
+      </v-text-field>
+        <v-text-field 
           required 
-          label="Password" 
+          label="Confirm Password" 
+          placeholder="Confirm Password"
           color="white" 
-          :type="show1 ? 'text' : 'password'"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          @click:append="show1 = !show1"
-          v-model="profile.password">
+          :type="showConfirmPassword ? 'text' : 'password'"
+          :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showConfirmPassword = !showConfirmPassword"
+          v-model="confirmPassword">
         </v-text-field>
       </v-col>
-      <v-col class="col-12 d-flex">
-        <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="success"
+      <v-col class="col-12 pr-5 pl-5">
+        <v-switch
+          label="Quiero recibir novedades de appets por email"
+          color="verde_fuerte"
+          v-model="notificar"
+        ></v-switch>
+      </v-col>
+      <v-col class="col-12 pr-10 pl-10 text-center text-caption">
+        <div class="pa-5">
+          Al crear una cuenta estas aceptando los terminos los <a>termino y condiciones</a> de Appets y sus <a>politica de privacidad</a>
+        </div>
+      </v-col>
+      <!-- BTN Crear usuario -->
+      <v-col class="col-12 d-flex pl-5 pr-5 mb-5">
+        <v-btn x-large style="width:100%" rounded class="white--text font-weight-bold" color="verde_fuerte"
           @click="createProfile()">CREAR USUARIO</v-btn>
+      </v-col>
+      <v-col class="col-12 d-flex pl-5 pr-5 mb-5">
+        <v-spacer></v-spacer>
+        <g-signin-button
+              :params="googleSignInParams"
+              @success="onSignInSuccessGoogle"
+              @error="onSignInError"
+              >
+              <v-icon color="white">mdi-google</v-icon>
+              Continuar con Google
+            </g-signin-button>
+            <v-spacer></v-spacer>
+      </v-col>
+      <v-col class="col-12 d-flex pl-5 pr-5 mb-5">
+        <v-spacer></v-spacer>
+        <fb-signin-button
+              :params="fbSignInParams"
+              @success="onSignInSuccessFacebook"
+              @error="onSignInError">
+              <v-icon>mdi-facebook</v-icon>
+              Sign in with Facebook
+            </fb-signin-button>
+            <v-spacer></v-spacer>
       </v-col>
     </v-row>
     <v-snackbar
@@ -49,13 +95,15 @@
                     profile_picture: null
                 },
                 showSnackbar: false,
-                show1: false
+                confirmPassword: '',
+                showPassword: false,
+                showConfirmPassword: false,
+                notificar: true
             }
         },
         methods: {
             createProfile() {
-
-                if (this.profile.profile_picture == null) {
+                if (this.profile.profile_picture == null || this.profile.password != this.confirmPassword) {
                     this.showSnackbar = true
                     return;
                 }
@@ -81,7 +129,44 @@
                     });
                     return this.$router.push('/')
                 } catch (e) {}
+            },
+            onSignInSuccessGoogle(googleUser) {
+                // `googleUser` is the GoogleUser object that represents the just-signed-in user.
+                // See https://developers.google.com/identity/sign-in/web/reference#users
+                const profile = googleUser.getBasicProfile() // etc etc
+            },
+            onSignInSuccessFacebook(response) {
+                FB.api('/me', dude => {
+                    console.log(`Good to see you, ${dude.name}.`)
+                })
+            },
+            onSignInError(error) {
+                // `error` contains any error occurred.
+                console.log('OH NOES', error)
             }
         }
     }
 </script>
+
+<style scoped>
+    .g-signin-button {
+        /* This is where you control how the button looks. Be creative! */
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        background-color: #3c82f7;
+        color: #fff;
+        box-shadow: 0 3px 0 #0f69ff;
+        margin: 8px;
+    }
+    
+    .fb-signin-button {
+        /* This is where you control how the button looks. Be creative! */
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 3px;
+        background-color: #4267b2;
+        color: #fff;
+        margin: 8px;
+    }
+</style>
