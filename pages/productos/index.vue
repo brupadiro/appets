@@ -1,6 +1,6 @@
 <template>
     <div class="productos">
-        <div class="app-bar-productos primary pt-3 ">
+        <div class="app-bar-productos verde_fuerte pt-3 ">
             <h2 class="white--text text-center">Productos</h2>
             <v-text-field
             class="ma-2"
@@ -14,7 +14,7 @@
             ></v-text-field>
           </div>
         <div class="pa-4 lista_de_productos">
-            <v-btn v-show="showRefresh" color="primary" fab class="btnRefresh" @click="refreshProducts"><v-icon>mdi-refresh</v-icon></v-btn>
+            <v-btn v-show="showRefresh" color="verde_fuerte" fab class="btnRefresh" @click="refreshProducts"><v-icon color="white">mdi-refresh</v-icon></v-btn>
             <v-row v-if="productos.length != 0" >
                 <v-col class="col-6" v-for="(producto,index) in productos"  :key="index">
                     <producto 

@@ -20,15 +20,17 @@
             <v-col class="col-12 col-md-12 pr-10 pl-10">
                 <v-text-field
                     label="ID"
+                    type="number"
                 ></v-text-field>
             </v-col>
-            <v-col class="col-12 col-md-12 pr-5 pl-5">
+            <v-col class="col-12 col-md-12 text-center">
                 <v-btn 
                 x-large 
-                style="width:100%" 
+                style="width:80%" 
                 rounded 
-                class="white--text font-weight-bold absolute" 
+                class="white--text font-weight-bold" 
                 color="verde_fuerte"
+                @click="$router.push('/activar_notificaciones')"
                 >LISTO</v-btn>
             </v-col>
     </v-row>
@@ -37,7 +39,7 @@
 
 <script>
     export default {
-        layout: 'disconected',
+        layout: 'empty',
         data() {
             return {
                 id: ''

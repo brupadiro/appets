@@ -2,7 +2,12 @@
   <v-container d-flex align-center class="">
     <v-row no-gutters class="fill-height align-content-space-around d-flex">
       <v-col class="col-12 text-center">
-              <v-img src="/logo.png" class="ma-auto" width="300px"></v-img>
+              <v-img 
+              src="/logo.png" 
+              class="ma-auto" 
+              width="300px"
+              @click="$router.push('/home')"
+              ></v-img>
       </v-col>
       <v-col class="col-12 pa-4">
         <v-text-field prepend-inner-icon="mdi-email" outlined required label="Email" color="white" type="email" v-model="profile.email"></v-text-field>
@@ -21,7 +26,7 @@
           @click="loginUser()">INICIAR SESION</v-btn>
           <div class="d-flex">
             <v-spacer></v-spacer>
-            <span>Olvidaste tu contrase;a?</span>
+            <span>¿Olvidaste tu contraseña?</span>
           </div>
           <div class="d-flex flex-column justify-center align-center mt-4">
             <g-signin-button
@@ -75,7 +80,7 @@
                             password: this.profile.password
                         }
                     })
-                    return this.$router.push('/')
+                    return this.$router.push('/activar_notificaciones')
                 } catch (e) {
                     this.showSnackbar = true
                 }

@@ -1,21 +1,24 @@
 <template>
   <div class="pa-3">
-    <v-bottom-navigation fixed grow app class="bottom-navigation" height="45px">
-      <v-btn color="secondary"  to="/" icon small>
+    <v-bottom-navigation fixed grow app class="bottom-navigation verde_suave" height="60px">
+      <v-btn color="verde_fuerte"  to="/" icon small>
+        Social
         <v-icon>mdi-text-account</v-icon>
       </v-btn>
       
-      <v-btn value="productos" color="secondary" icon small  to="/productos">
+      <v-btn value="productos" color="verde_fuerte" icon small  to="/productos">
+        Servicios
         <v-icon>mdi-cart-variant</v-icon>
       </v-btn>
    
-      <v-btn value="my-pets" color="secondary"  to="/myPets" icon small>
-          <v-avatar color="primary" size="55px" class="p-absolute elevation-5">
+      <v-btn value="my-pets" color="verde_fuerte"  to="/myPets" icon small>
+          <v-avatar color="verde_fuerte" size="65px" class="p-absolute elevation-5">
             <v-icon color="white">mdi-map</v-icon>
           </v-avatar>
       </v-btn>
 
-      <v-btn value="profile" color="secondary" to="/profile" icon small>
+      <v-btn value="profile" color="verde_fuerte" to="/profile" icon small>
+        Perfil
         <v-icon>mdi-account-circle-outline</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -35,12 +38,14 @@
 
 <style>
     .bottom-navigation {
-        margin: 12px;
+        /* margin: 12px;
         width: calc(100% - 24px)!important;
-        border-radius: 3px;
+        border-radius: 3px; */
     }
     
     .p-absolute {
         position: absolute;
+        top: -30px;
+        border-style: dotted;
     }
 </style>

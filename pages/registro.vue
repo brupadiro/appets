@@ -1,13 +1,25 @@
 <template>
   <v-container class="pa-0">
     <v-row no-gutters class="align-content-space-around d-flex">
-      <!-- Crear cuetna -->
-      <v-col class="col-12 col-md-12 mb-3 verde_suave text-center pa-5">
-          <h3 class="verde_fuerte--text">CREAR CUENTA NUEVA</h3>
+      <!-- Crear cuenta -->
+      <v-col class="col-12 col-md-12 mb-3 d-flex verde_suave text-center pa-5">
+        <v-btn icon small @click="$router.push('/home')">
+            <v-icon color="verde_fuerte">mdi-arrow-left</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
+        <h3 class="verde_fuerte--text">CREAR CUENTA NUEVA</h3>
+        <v-spacer></v-spacer>
       </v-col>
       <!-- ==== -->
-      <v-col class="col-12 pr-5 pl-5">
-        <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)"></drag-and-drop-photo-card>
+      <v-col class="col-12 pr-5 pl-5 relative">
+        <v-progress-circular
+        :size="50"
+        color="verde_fuerte"
+        indeterminate
+        v-show="loading"
+        class="loading"
+        ></v-progress-circular>
+        <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="initialImage"></drag-and-drop-photo-card>
         <v-text-field required label="Nombre completo" color="white" type="text" v-model="profile.username">
         </v-text-field>
         <v-text-field required label="Email" type="email" color="white" v-model="profile.email"></v-text-field>
@@ -81,6 +93,7 @@
     >
     Error en el registro
     </v-snackbar>
+
   </v-container>
 </template>
 
@@ -94,29 +107,76 @@
                 profile: {
                     profile_picture: null
                 },
+                profile_picture: {
+                    file: {},
+                    url: ""
+                },
+                googleSignInParams: {
+
+                },
+                fbSignInParams: {
+                    scope: 'email,user_likes',
+                    return_scopes: true
+                },
                 showSnackbar: false,
                 confirmPassword: '',
                 showPassword: false,
                 showConfirmPassword: false,
-                notificar: true
+                notificar: true,
+                loading: false,
+            }
+        },
+        computed: {
+            initialImage() {
+                return (this.profile_picture.url == '') ? null : this
+                    .profile_picture.url
             }
         },
         methods: {
             createProfile() {
-                if (this.profile.profile_picture == null || this.profile.password != this.confirmPassword) {
+                this.loading = true
+                if (this.profile_picture.url == null || this.profile.password != this.confirmPassword) {
+                    console.log("Problemas con los campos")
                     this.showSnackbar = true
+                    this.loading = false
                     return;
                 }
-
+                //this.profile.profile_picture = this.profile_picture.url
                 axios.post(this.$axios.defaults.baseURL + '/auth/local/register', this.profile)
-                    .then((data) => {
-                        this.login()
+                    .then(async(data) => {
+                        await this.login()
                     }).catch((err) => {
+                        console.error(err)
                         this.showSnackbar = true
+                        this.loading = false
                     })
             },
-            setProfilePicture(e) {
-                this.profile.profile_picture = e
+            async uploadPicture() {
+                let profilePicture = new FormData()
+                profilePicture.append('field', 'profile_picture')
+                profilePicture.append('files', this.profile_picture.file)
+                profilePicture.append('source', 'users-permissions');
+                profilePicture.append('ref', 'user')
+                profilePicture.append('refId', this.$auth.user.id)
+                await axios.post('/upload', profilePicture, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).catch((error) => {
+                    this.showSnackbar = true
+                    this.loading = false
+                })
+            },
+            setProfilePicture(file) {
+                //File
+                this.profile_picture.file = file
+                    //URL
+                var reader = new FileReader()
+
+                reader.onload = (e) => {
+                    this.profile_picture.url = e.target.result
+                };
+                reader.readAsDataURL(file)
             },
             async login() {
                 this.loading = true
@@ -127,7 +187,8 @@
                             password: this.profile.password
                         }
                     });
-                    return this.$router.push('/')
+                    await this.uploadPicture()
+                    return this.$router.push('/gps')
                 } catch (e) {}
             },
             onSignInSuccessGoogle(googleUser) {
@@ -168,5 +229,15 @@
         background-color: #4267b2;
         color: #fff;
         margin: 8px;
+    }
+    
+    .loading {
+        position: absolute;
+        top: 10px;
+        left: calc(50vw - 25px);
+    }
+    
+    .relative {
+        position: relative;
     }
 </style>

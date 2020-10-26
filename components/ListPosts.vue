@@ -2,10 +2,10 @@
     <div>
         <v-row v-if="showOptionsHomeSeguidores">
             <v-col class="col-6 col-md-6">
-              <v-btn rounded @click.native="followersPublications=false" depressed :color="(followersPublications)?'':'primary'">GENERAL</v-btn>
+              <v-btn rounded @click.native="followersPublications=false" depressed :class="(followersPublications)?'':'white--text'" :color="(followersPublications)?'':'verde_fuerte'">GENERAL</v-btn>
             </v-col>
             <v-col class="col-6 col-md-6 text-right">
-                <v-btn rounded @click.native="followersPublications=true" depressed :color="(!followersPublications)?'':'primary'">SEGUIDOS</v-btn>
+                <v-btn rounded @click.native="followersPublications=true" :class="(!followersPublications)?'':'white--text'" depressed :color="(!followersPublications)?'':'verde_fuerte'">SEGUIDOS</v-btn>
             </v-col>
         </v-row>
         <div class="d-flex flex-column justify-center align-center text-center">
@@ -57,6 +57,7 @@
                 showPostDetailsDialog: false,
                 loading: true,
                 followersPublications: false,
+                text_white: 'white--text'
             }
         },
         created() {

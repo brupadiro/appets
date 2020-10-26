@@ -8,10 +8,10 @@
 
 <script>
     export default {
-        middleware(cntx) {
-            if (cntx.$auth.loggedIn) {
-                cntx.redirect("/")
-            }
-        },
+        // middleware(cntx) {
+        //     if (cntx.$auth.loggedIn) {
+        //         cntx.redirect("/")
+        //     }
+        // },
     }
 </script>

@@ -1,11 +1,6 @@
 <template>
     <v-container class="pa-0">
         <v-row>
-            <v-col class="col-12 col-md-12">
-                <v-btn icon small @click="$router.push('/')">
-                    <v-icon>mdi-arrow-left</v-icon>
-                  </v-btn>
-            </v-col>
             <v-col class="col-12 pr-5 pl-5 text-center">
                 <h2>Habilitar Notificaciones</h2>
                 <p class="grey--text pa-5">Habilite las notificaciones push. </br> Para obtener mas ofertas y actualizaciones </p>
@@ -25,6 +20,7 @@
                 rounded 
                 class="white--text font-weight-bold absolute" 
                 color="verde_fuerte"
+                @click="$router.push('/')"
                 >Permitir</v-btn>
                 
             </v-col>
@@ -34,7 +30,8 @@
                 text 
                 class="white--text font-weight-bold absolute" 
                 color="verde_fuerte"
-                >LISTO</v-btn>
+                @click="$router.push('/')"
+                >Denegar</v-btn>
             </v-col>
     </v-row>
     </v-container>
@@ -42,6 +39,6 @@
 
 <script>
     export default {
-        layout: 'disconected',
+        layout: 'empty'
     }
 </script>
