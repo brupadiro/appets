@@ -26,7 +26,7 @@
           @click="loginUser()">INICIAR SESION</v-btn>
           <div class="d-flex">
             <v-spacer></v-spacer>
-            <span>¿Olvidaste tu contraseña?</span>
+            <span @click="showNewPassword = true" >¿Olvidaste tu contraseña?</span>
           </div>
           <div class="d-flex flex-column justify-center align-center mt-4">
             <g-signin-button
@@ -48,12 +48,76 @@
       </v-col>
       
     </v-row>
+
+    <!-- NewPassword -->
+    <v-dialog
+      v-model="showNewPassword"
+      max-width="500px"
+      transition="dialog-transition"
+      class="text-center"
+    >
+    <v-card>
+      <v-card-title primary-title>
+        Nueva contraseña
+      </v-card-title>
+      <v-card-text>
+        <p>Te enviaremos un email</p>
+        <v-text-field
+          name="email"
+          label="Tu email"
+          v-model="email"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="verde_fuerte" outlined @click="showResetPass = true">Ingresar codigo</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="verde_fuerte" class="white--text" @click="newPassword" >Enviar email</v-btn>
+      </v-card-actions>
+    </v-card>
+    </v-dialog>
+    <!-- ResetPassword -->
+    <v-dialog
+    v-model="showResetPass"
+      max-width="500px"
+      transition="dialog-transition"
+      class="text-center"
+    >
+    <v-card>
+      <v-card-title primary-title>
+        Nueva contraseña
+      </v-card-title>
+      <v-card-text>
+        <p>Copia el codigo que te enviamos por email y pegalo aqui</p>
+        <v-text-field
+          name="codigo"
+          label="Codigo"
+          v-model="codigo"
+        ></v-text-field>
+        <v-text-field
+          name="contraseña"
+          label="Contraseña"
+          v-model="resetPass"
+        ></v-text-field>
+        <v-text-field
+          name="contraseña_confirm"
+          label="Confirmacion de contraseña"
+          v-model="resetPassConf"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="verde_fuerte" class="white--text" @click="resetPassword" >Cambiar contrase;a</v-btn>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
+      
+    </v-dialog>
     <v-snackbar
       v-model="showSnackbar"
       timeout="1000"
-      color="red"
+      :color="snackBarColor"
     >
-    Credenciales incorrectas
+    {{snackBarMessage}}
     </v-snackbar>
   </v-container>
 </template>
@@ -67,10 +131,52 @@
             return {
                 profile: {},
                 show1: false,
-                showSnackbar: false
+                showSnackbar: false,
+                showNewPassword: false,
+                email: '',
+                snackBarMessage: 'Credenciales incorrectas',
+                showResetPass: false,
+                codigo: '',
+                resetPass: '',
+                resetPassConf: ''
+            }
+        },
+        computed: {
+            snackBarColor() {
+                return (this.snackBarMessage == 'Credenciales incorrectas' || this.snackBarMessage == 'Contraseñas no coinciden') ? 'red' : 'green'
             }
         },
         methods: {
+            newPassword() {
+                axios.post('/auth/forgot-password', {
+                    email: this.email
+                }).then(response => {
+                    this.snackBarMessage = 'Se envio el email'
+                    this.showNewPassword = false
+                    this.showSnackbar = true
+                }).catch(error => {
+                    this.snackBarMessage = 'Credenciales incorrectas'
+                    this.showNewPassword = false
+                    this.showSnackbar = true
+                })
+            },
+            resetPassword() {
+                axios.post('/auth/reset-password', {
+                    code: this.codigo,
+                    password: this.resetPass,
+                    passwordConfirmation: this.resetPassConf
+
+                }).then((response) => {
+                    this.snackBarMessage = 'Nueva contraseña lista'
+                    this.showResetPass = false
+                    this.showNewPassword = false
+                    this.showSnackbar = true
+                }).catch(error => {
+                    this.snackBarMessage = 'Contraseñas no coinciden'
+                    this.showNewPassword = false
+                    this.showSnackbar = true
+                })
+            },
             async loginUser() {
                 this.loading = true
                 try {
@@ -82,6 +188,7 @@
                     })
                     return this.$router.push('/activar_notificaciones')
                 } catch (e) {
+                    this.snackBarMessage = 'Credenciales incorrectas'
                     this.showSnackbar = true
                 }
             },
