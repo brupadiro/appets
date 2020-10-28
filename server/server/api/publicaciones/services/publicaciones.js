@@ -13,7 +13,7 @@ module.exports = {
 
         return Promise.all(
             publicaciones.map(async publicacion => {
-                let likes = await strapi.query('likes').find({ publicacion: publicacion.id }, populate)
+                let likes = await strapi.query('likes').find({ publicacion: publicacion.id, _sort: 'created_at:ASC' }, populate)
                 publicacion.likes = likes.map(like => {
                     return {
                         like_id: like.id,
@@ -23,6 +23,7 @@ module.exports = {
                 })
                 let comentarios = await strapi.query('comentarios').count({ publicacion: publicacion.id })
                 publicacion.comentarios_cant = comentarios
+                delete publicacion.user.password
                 return publicacion
             })
         )
@@ -31,7 +32,7 @@ module.exports = {
     async findOne(params, populate) {
         const { id } = params
         const publicacion = await strapi.query('publicaciones').findOne({ id })
-        const likes = await strapi.query('likes').find({ publicacion: id })
+        const likes = await strapi.query('likes').find({ publicacion: id, _sort: 'created_at:ASC' })
         publicacion['likes'] = likes.map(like => {
             return {
                 like_id: like.id,
@@ -39,6 +40,7 @@ module.exports = {
                 username: like.user.username
             }
         })
+        delete publicacion.user.password
         return publicacion
     }
 };

@@ -35,6 +35,7 @@ module.exports = {
 
         var filter = {
             user_in: seguidos,
+            _sort: 'created_at:ASC'
         }
 
         if (ctx.query._start != undefined)
@@ -59,6 +60,7 @@ module.exports = {
                 })
                 let comentarios = await strapi.query('comentarios').find({ publicacion: entity.id })
                 entity.comentarios_cant = comentarios.length
+                delete entity.user.password
                 return entity
             })
         );

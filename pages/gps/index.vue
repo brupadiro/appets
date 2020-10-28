@@ -1,5 +1,5 @@
 <template>
-    <v-container class="fill-height pa-0">
+    <v-container class="pa-0">
         <v-row>
                 <v-col class="col-12 col-md-12 mb-3 verde_suave text-center pa-5">
                     <h3 class="verde_fuerte--text">HOLA!</h3>

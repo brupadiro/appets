@@ -141,7 +141,7 @@
                     this.loading = false
                     return;
                 }
-                //this.profile.profile_picture = this.profile_picture.url
+                this.profile.profile_picture = this.profile_picture.url
                 axios.post(this.$axios.defaults.baseURL + '/auth/local/register', this.profile)
                     .then(async(data) => {
                         await this.login()
