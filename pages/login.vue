@@ -66,6 +66,7 @@
           name="email"
           label="Tu email"
           v-model="email"
+          color="primary"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>

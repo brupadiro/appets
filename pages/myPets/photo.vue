@@ -5,7 +5,7 @@
             <span class="font-weight-light">Sube la mejor foto de tu mascota</span>
         </div>
         <div>
-            <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)"></drag-and-drop-photo-card>
+            <drag-and-drop-photo-card @uploadedPicture="setProfilePicture($event)" :image="initialImage"></drag-and-drop-photo-card>
         </div>
         <div>
             <h2>Y su nombre es...</h2>
@@ -25,23 +25,37 @@
         },
         data() {
             return {
-                name: ''
+                name: '',
+                initialImage: null
             }
         },
         methods: {
-            setPetName(e){
-                this.$store.dispatch('myPets/setName',e)
+            setPetName(e) {
+                this.$store.dispatch('myPets/setName', e)
             },
-            setProfilePicture(e){
-                console.log(e)
-                this.$store.dispatch('myPets/setProfilePicture',e)
+            setProfilePicture(image) {
+                console.log(image)
+                var reader = new FileReader()
+
+                reader.onload = (e) => {
+                    this.initialImage = e.target.result
+                }
+                reader.readAsDataURL(image)
+                this.$store.dispatch('myPets/setProfilePicture', image)
             },
             savePet() {
-                let data = new FormData() 
-                data.append(`data`,JSON.stringify({...this.getPet,...this.$auth.user.id}))
-                data.append('files.profile_picture',this.getPet.profile_picture)
-                this.$axios.post('/mascotas/',data,{headers: {'Content-Type': 'multipart/form-data' }})
-                    .then(()=>{
+                let data = new FormData()
+                data.append(`data`, JSON.stringify({...this.getPet,
+                    user: this.$auth.user.id
+                }))
+                console.log(data.getAll('user'))
+                data.append('files.profile_picture', this.getPet.profile_picture)
+                this.$axios.post('/mascotas/', data, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(() => {
                         this.$router.push('/myPets')
                     })
             }

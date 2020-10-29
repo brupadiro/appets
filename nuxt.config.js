@@ -89,7 +89,7 @@ export default {
         },
         redirect: {
             login: "/bienvenido",
-            logout: "/bienvenido",
+            logout: "/home",
             user: "/"
         }
     },

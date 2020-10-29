@@ -1,8 +1,8 @@
 <template>
     <v-app>
-        <v-content>
+        <v-main>
           <nuxt />
-        </v-content>
+        </v-main>
       <bottom-navigation-bar></bottom-navigation-bar>
     </v-app>
   </template>

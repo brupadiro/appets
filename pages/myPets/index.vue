@@ -60,7 +60,7 @@
         },
         methods: {
             getPets() {
-                this.$axios.get('/mascotas')
+                this.$axios.get(`/mascotas/?user=${this.$auth.user.id}`)
                     .then((data) => {
                         this.pets = data.data
                     })
