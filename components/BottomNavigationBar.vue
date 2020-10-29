@@ -13,7 +13,10 @@
    
       <v-btn value="my-pets" color="verde_fuerte"  to="/myPets" icon small>
           <v-avatar color="verde_fuerte" size="65px" class="p-absolute elevation-5">
-            <v-icon color="white">mdi-map</v-icon>
+            <v-icon v-if="petImg == '' || petImg == null" color="white">mdi-map</v-icon>
+            <v-img v-else
+          :src="$axios.defaults.baseURL + petImg"
+        ></v-img>
           </v-avatar>
       </v-btn>
 
@@ -30,8 +33,14 @@
         name: 'BottomNavigationBar',
         data() {
             return {
-                bottomNav: 'profile'
+                bottomNav: 'profile',
+                petImg: ''
             }
+        },
+        mounted() {
+            this.$root.$on('cambiarFotoMapaButton', (newImg) => {
+                this.petImg = newImg
+            })
         }
     }
 </script>

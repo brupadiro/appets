@@ -136,7 +136,6 @@
             createProfile() {
                 this.loading = true
                 if (this.profile_picture.url == null || this.profile.password != this.confirmPassword) {
-                    console.log("Problemas con los campos")
                     this.showSnackbar = true
                     this.loading = false
                     return;
@@ -146,7 +145,6 @@
                     .then(async(data) => {
                         await this.login()
                     }).catch((err) => {
-                        console.error(err)
                         this.showSnackbar = true
                         this.loading = false
                     })

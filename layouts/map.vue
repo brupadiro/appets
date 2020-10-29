@@ -1,16 +1,20 @@
 <template>
     <v-app>
-      <v-main>
         <v-content>
           <nuxt />
         </v-content>
-      </v-main>
+      <bottom-navigation-bar></bottom-navigation-bar>
     </v-app>
   </template>
 
 <script>
+    import BottomNavigationBar from "~/components/BottomNavigationBar.vue"
+
     export default {
         middleware: "auth",
+        components: {
+            BottomNavigationBar
+        }
 
     }
 </script>
