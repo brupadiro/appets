@@ -10,7 +10,8 @@
   },
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "id_collar": {
       "type": "string",
@@ -27,13 +28,27 @@
         "images"
       ],
       "plugin": "upload",
-      "required": false
+      "required": true
     },
     "type": {
       "type": "enumeration",
       "enum": [
         "Perro",
-        "Gato"
+        "Gato",
+        "Otro"
+      ]
+    },
+    "castrado": {
+      "type": "boolean"
+    },
+    "nacimiento": {
+      "type": "date"
+    },
+    "sex": {
+      "type": "enumeration",
+      "enum": [
+        "macho",
+        "hembra"
       ]
     }
   }
