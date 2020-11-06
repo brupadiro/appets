@@ -32,7 +32,7 @@
           </div>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text color="info" :nuxt="true" :to="`myPets/map/${pet.id}`">Ver en el mapa</v-btn>
+            <v-btn text color="info" :nuxt="true" :to="`/myPets/map/${pet.id}`">Ver en el mapa</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

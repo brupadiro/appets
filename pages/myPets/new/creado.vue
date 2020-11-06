@@ -10,6 +10,7 @@
             <v-btn 
             color="warning"
             block rounded
+            @click="next"
             >Finalizar</v-btn>
         </div>
     </v-container>
@@ -18,5 +19,11 @@
 <script>
     export default {
         layout: 'newPet',
+        methods: {
+            next() {
+                this.$store.dispatch('myPets/clean')
+                this.$router.push('/myPets/')
+            }
+        }
     }
 </script>

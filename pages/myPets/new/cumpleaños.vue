@@ -10,6 +10,7 @@
         <v-text-field
         name="cumpleaños"
         placeholder="¿Cuando es el cumpleaños de tu mascota?"
+        type="date"
         id="cumpleaños"
         v-model="cumpleaños"
         :rules="cumpleañosRules"
@@ -42,8 +43,24 @@
             siguiente() {
                 this.$refs.form.validate()
                 if (!this.valid) return;
-                this.$store.dispatch('mPets/setCumpleaños', this.cumpleaños)
-                this.$router.push('/myPets/new/creado/')
+                this.$store.dispatch('myPets/setCumpleaños', this.cumpleaños)
+                let data = new FormData()
+                data.append(`data`, JSON.stringify({...this.getPet(),
+                    user: this.$auth.user.id
+                }))
+                data.append('files.profile_picture', this.getPet().profile_picture)
+                this.$axios.post('/mascotas/', data, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(() => {
+                        this.$router.push('/myPets/new/creado/')
+                    })
+
+            },
+            getPet() {
+                return this.$store.getters['myPets/pet'];
             }
         }
     }

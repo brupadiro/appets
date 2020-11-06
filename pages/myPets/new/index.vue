@@ -60,20 +60,7 @@
                 this.$store.dispatch('myPets/setProfilePicture', image)
             },
             savePet() {
-                // let data = new FormData()
-                // data.append(`data`, JSON.stringify({...this.getPet,
-                //     user: this.$auth.user.id
-                // }))
-                // console.log(data.getAll('user'))
-                // data.append('files.profile_picture', this.getPet.profile_picture)
-                // this.$axios.post('/mascotas/', data, {
-                //         headers: {
-                //             'Content-Type': 'multipart/form-data'
-                //         }
-                //     })
-                //     .then(() => {
-                //         this.$router.push('/myPets')
-                //     })
+
                 this.$refs.formNewPetIndex.validate()
                 console.log(this.valid)
                 if (!this.valid) return;

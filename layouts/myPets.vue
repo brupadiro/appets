@@ -8,7 +8,7 @@
             <v-toolbar-title v-text="'Mis mascotas'" class="overline white--text" />
           </v-col>
           <v-col class="col-4 d-flex justify-end align-center">
-            <v-btn icon small :nuxt="true" to="myPets/new/">
+            <v-btn icon small :nuxt="true" to="/myPets/new/">
               <v-icon>mdi-paw</v-icon>
             </v-btn>
           </v-col>

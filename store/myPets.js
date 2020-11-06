@@ -3,7 +3,7 @@ export const state = () => ({
         name: '',
         type: '',
         sex: '',
-        cumpleaños: 0,
+        nacimiento: 0,
         castrado: false,
         profile_picture: null
     }
@@ -12,7 +12,7 @@ export const state = () => ({
 export const mutations = {
 
     setCumpleaños(state, cumpleaños) {
-        state.pet.cumpleaños = cumpleaños
+        state.pet.nacimiento = cumpleaños
     },
     setCastrado(state, castrado) {
         state.pet.castrado = castrado
@@ -29,6 +29,14 @@ export const mutations = {
     setProfilePicture(state, profile_picture) {
         state.pet.profile_picture = profile_picture
     },
+    cleanData(state) {
+        state.pet.name = ''
+        state.pet.type = ''
+        state.pet.sex = ''
+        state.pet.nacimiento = 0
+        state.pet.castrado = false
+        state.pet.profile_picture = null
+    }
 }
 
 export const actions = {
@@ -49,6 +57,9 @@ export const actions = {
     },
     setProfilePicture({ commit }, profile_picture) {
         commit('setProfilePicture', profile_picture)
+    },
+    clean({ commit }) {
+        commit('cleanData')
     }
 
 }

@@ -49,14 +49,14 @@
               class=" text-center d-flex flex-column justify-center align-center">
               <v-avatar
                 size="132"
-                :color="(getPetType=='Otro') ? 'red' : 'white' "
+                :color="(getPetType !='Perro' && getPetType !='Gato') ? 'red' : 'white' "
                 @click="setType('Otro')"
               >
                 <v-avatar
                   size="125"
                   color="white"
                   >
-                  <v-avatar color="green" size="120" >
+                  <v-avatar color="orange" size="120" >
                     <v-img src="/paw.png" contain></v-img>
                   </v-avatar>                
                 </v-avatar>
@@ -86,14 +86,23 @@
         v-model="valid"
         lazy-validation
         >
-          <v-text-field
+          <v-select
+          name="tipo-de-mascota"
+          id="tipo-de-mascota"
+           v-model="select"
+           :items="otroTipoDeMascota"
+           label="Otros tipos de mascota"
+           :rules="otroTipoDeMascotaRules"
+           required
+          ></v-select>
+          <!-- <v-text-field
           name="tipo-de-mascota"
           label="Tipo de mascota"
           id="tipo-de-mascota"
           v-model="otroTipoDeMascota"
           :rules="otroTipoDeMascotaRules"
           required
-          ></v-text-field>
+          ></v-text-field> -->
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -110,18 +119,21 @@
         layout: 'newPet',
         data() {
             return {
+
+                select: null,
                 showOtroTipoDeMascota: false,
                 valid: true,
-                otroTipoDeMascota: '',
+                otroTipoDeMascota: [
+                    'Vaca', 'Caballo'
+                ],
                 otroTipoDeMascotaRules: [
-                    v => !!v || 'Name is required',
+                    v => !!v || 'Tipo de mascota is required',
                     v => (v && v.length > 0) || 'Name must be less than 10 characters',
                 ],
             }
         },
         methods: {
             setType(type) {
-                console.log(type)
                 this.$store.dispatch('myPets/setType', type)
             },
             next() {
@@ -131,13 +143,14 @@
                     return;
                 }
 
-                this.$router.push("/myPets/new/cumpleaños/")
+                this.$router.push("/myPets/new/sexo/")
             },
             nextPage() {
 
                 this.$refs.form.validate()
                 if (this.valid) {
-                    this.$router.push("/myPets/new/cumpleaños/")
+                    this.$store.dispatch('myPets/setType', this.select)
+                    this.$router.push("/myPets/new/sexo/")
                 }
             }
         },

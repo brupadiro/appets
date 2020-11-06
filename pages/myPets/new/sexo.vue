@@ -34,7 +34,7 @@
                 <h3>¿Castrado/a?</h3>
                 <v-row class="pa-5">
                     <v-col class="col-6 text-center" >
-                        <v-btn color="blue" rounded block :disabled="(sexPet == '')"  @click="siguiente(true)">Si</v-btn>
+                        <v-btn color="blue" class="white--text" rounded block :disabled="(sexPet == '')"  @click="siguiente(true)">Si</v-btn>
                     </v-col>
                     <v-col class="col-6 text-center" >
                         <v-btn color="warning" rounded block :disabled="(sexPet == '')" @click="siguiente(false)">No</v-btn>
@@ -53,7 +53,7 @@
         methods: {
             siguiente(val) {
                 this.$store.dispatch("myPets/setCastrado", val)
-                this.$router.push("/myPets/new/cumpleYPeso")
+                this.$router.push("/myPets/new/cumpleaños")
             }
         },
         computed: {

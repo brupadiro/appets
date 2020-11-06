@@ -1,17 +1,21 @@
 <template>
-    <v-container>
-        <v-sheet                               
-      title="TAP TO ADD"
-      color="indigo lighten-4"
-      width="50%"
-      height="200"
-      class="pa-2 ma-auto rounded d-flex justify-center align-center dotted-border"
-      @click="selectPhoto"
-    >
-    <v-icon size="80" v-if="image == null">mdi-camera-plus-outline</v-icon>
-    <v-img id="previewImg" v-else :src="image" max-height="100%" contain></v-img>
-    <input type="file" style="display:none;" id="uploadFile" @change="onFileChange" accept="image/*">
-    </v-sheet>
+    <v-container class="text-center">
+        <v-avatar
+            size="45vw"
+        >
+            <v-sheet                               
+            title="TAP TO ADD"
+            color="blue"
+            width="100%"
+            height="100%"
+            class="pa-2 ma-auto rounded d-flex justify-center align-center dotted-border"
+            @click="selectPhoto"
+        >
+            <v-icon size="50" v-if="image == null" color="white">mdi-camera-plus-outline</v-icon>
+            <v-img id="previewImg" v-else :src="image" max-height="100%" contain></v-img>
+            <input type="file" style="display:none;" id="uploadFile" @change="onFileChange" accept="image/*">
+            </v-sheet>
+        </v-avatar>
     </v-container>
 </template>
 
@@ -19,11 +23,6 @@
     export default {
         name: 'DragAndDropPhotoCard',
         props: ['image'],
-        // data() {
-        //     return {
-        //         image: null,
-        //     }
-        // },
         methods: {
             selectPhoto(event) {
                 console.log("click")
