@@ -1,6 +1,41 @@
 <template>
   <v-container class="pa-0">
-    <div class="blue-grey lighten-5">
+    <div
+    class="relative d-flex flex-column align-center"
+    >
+      <v-img
+      src="/1.png"
+      height="45vh"
+      width="100vw"
+      >
+      </v-img>
+
+      <div 
+      class="pa-5 first-info-profile white--text mb-n10">
+        <h2>Pascual</h2>
+        <span>Maldonado</span>
+        <div class="pt-5">
+          <v-row  class="orange rounded-lg elevation-1">
+            <v-col class="text-center ">
+              <span>231</span>
+              <br>
+              <span>Me gusta</span>
+            </v-col>
+            <v-col class="text-center">
+              <span>{{seguidores}}</span>
+              <br>
+              <span>Seguidores</span>
+            </v-col>
+            <v-col class="text-center">
+              <span>{{seguidos}}</span>
+              <br>
+              <span>Seguidos</span>
+            </v-col>
+          </v-row>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="blue-grey lighten-5">
       <v-row class="pt-5" no-gutters>
         <v-col class="col-4 d-flex flex-column justify-center align-center" @click="showListSeguidores">
           <p class="font-weight-black">{{seguidores}}</p>
@@ -33,7 +68,8 @@
         </v-tab-item>
       </v-tabs-items>
 
-    </div>
+    </div> -->
+    <list-posts class="mt-10" :user="$auth.user.id" ></list-posts>
     <v-dialog fullscreen v-model="modalEditProfile" class="mb-6">
       <v-card>
         <v-card-title class="text-center">
@@ -224,3 +260,16 @@
         }
     }
 </script>
+
+
+<style scoped>
+    .relative {
+        position: relative !important;
+    }
+    
+    .first-info-profile {
+        position: absolute !important;
+        bottom: 0px;
+        z-index: 1;
+    }
+</style>

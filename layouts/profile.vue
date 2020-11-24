@@ -1,45 +1,108 @@
 <template>
-    <v-app>
-      <v-app-bar fixed app class="elevation-3 primary">
-        <v-row no-gutters>
-          <v-col class="col-4  d-flex justify-center align-center">
-          </v-col>
-          <v-col class="col-4 text-center">
-            <v-toolbar-title v-text="'Perfil'" class="overline white--text" />
-          </v-col>
-          <v-col class="col-4 d-flex justify-end align-center">
-            <v-btn icon small @click="logout()">
-              <v-icon>mdi-exit-to-app</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
+  <v-app>
+      <v-app-bar
+      color="orange"
+      class="white--text elevation-0"
+      >
+          <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-spacer></v-spacer>
+          <v-toolbar-title>Perfil</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
       </v-app-bar>
-      <v-main class="pa-0 overflow">
-        <v-content>
-          <nuxt />
-        </v-content>
-      </v-main>
-      <bottom-navigation-bar></bottom-navigation-bar>
-    </v-app>
-  </template>
+      <v-navigation-drawer
+          v-model="drawer"
+          color="orange"
+          app
+          temporary
+          >
+    <v-list
+      nav
+      dense
+      class="pl-3 pt-3"
+    >
+    
+      <v-list-item-group
+        v-model="group"
+      >
+          <v-list-item-avatar size="70">
+          <img src="https://randomuser.me/api/portraits/women/81.jpg">
+          </v-list-item-avatar>
+          <v-list-item class="mb-5" two-line>
+  
+            <v-list-item-content>
+              <v-list-item-title class="white--text"><h2>Pascual</h2></v-list-item-title>
+              <v-list-item-subtitle class="white--text">Maldonado</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+  
+  
+        <v-list-item to="/profile">
+          <v-list-item-icon><v-icon color="white">mdi-account</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Mi perfil</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-ticket</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Actividad</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-bell</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Notificaciones</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-account-multiple</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Amigos</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-message-text</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Mensajes</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-image-multiple</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Galeria</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon><v-icon color="white">mdi-cog</v-icon></v-list-item-icon>
+          <v-list-item-title class="white--text" >Configuracion</v-list-item-title>
+        </v-list-item>
+
+      </v-list-item-group>
+    </v-list>
+  </v-navigation-drawer>
+    <v-content class="">
+      <nuxt />
+    </v-content>
+  </v-app>
+</template>
 
 <script>
-    import BottomNavigationBar from '../components/BottomNavigationBar'
+    import createPost from "~/components/createPost.vue"
 
     export default {
         middleware: "auth",
+        components: {
+            createPost,
+        },
         data() {
             return {
-                drawer: false
+                addPublication: false,
+                drawer: false,
+                group: null
             }
         },
-        methods: {
-            logout() {
-                this.$auth.logout()
-            }
+        watch: {
+            group(val) {
+                this.drawer = false
+            },
         },
-        components: {
-            BottomNavigationBar
-        }
+        methods: {}
     }
 </script>

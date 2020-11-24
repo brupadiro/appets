@@ -6,7 +6,7 @@
         >
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-spacer></v-spacer>
-            <v-toolbar-title>My files</v-toolbar-title>
+            <v-toolbar-title>Home</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon>
                 <v-icon>mdi-dots-vertical</v-icon>
@@ -96,29 +96,7 @@
             return {
                 addPublication: false,
                 drawer: false,
-                group: null,
-                items: [{
-                    title: "Mi perfil",
-                    icon: "mdi-account"
-                }, {
-                    title: "Actividad",
-                    icon: "mdi-ticket"
-                }, {
-                    title: "Notificaciones",
-                    icon: "mdi-bell"
-                }, {
-                    title: "Aimgos",
-                    icon: "mdi-account-multiple"
-                }, {
-                    title: "Mensajes",
-                    icon: "mdi-message-text"
-                }, {
-                    title: "Galeria",
-                    icon: "mdi-image-multiple"
-                }, {
-                    title: "Configuracion",
-                    icon: "mdi-cog"
-                }]
+                group: null
             }
         },
         watch: {
