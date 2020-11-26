@@ -6,13 +6,15 @@
             persistent
         >
         <v-card outlined class="elevation-0">
-            <v-card-title class="text-center">
+
+            <!-- <v-card-title class="text-center">
                 <v-btn icon @click="$emit('closeListSeguidoresSeguidos')">
                     <v-icon>mdi-arrow-left</v-icon>
                   </v-btn>
                 <h2 v-if="show_seguidores" >Seguidores</h2>
                 <h2 v-else >Seguidos</h2>
-            </v-card-title>
+            </v-card-title> -->
+            <drawer :title="(show_seguidores)?'Seguidores':'Seguidos'"></drawer>
             <v-card-text>
                     <v-list-item
                     v-for="(user, i) in users"
@@ -36,6 +38,8 @@
 </template>
 
 <script>
+    import Drawer from './Drawer.vue'
+
     export default {
         props: {
             showListSeguidoresSeguidos: false,
@@ -69,6 +73,9 @@
                 })
                 return users
             }
+        },
+        components: {
+            Drawer
         }
     }
 </script>

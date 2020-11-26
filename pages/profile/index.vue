@@ -21,12 +21,12 @@
               <br>
               <span>Me gusta</span>
             </v-col>
-            <v-col class="text-center">
+            <v-col class="text-center" @click="showListSeguidores">
               <span>{{seguidores}}</span>
               <br>
               <span>Seguidores</span>
             </v-col>
-            <v-col class="text-center">
+            <v-col class="text-center"  @click="showListSeguidos">
               <span>{{seguidos}}</span>
               <br>
               <span>Seguidos</span>
