@@ -14,7 +14,7 @@
                 <h2 v-if="show_seguidores" >Seguidores</h2>
                 <h2 v-else >Seguidos</h2>
             </v-card-title> -->
-            <drawer :title="(show_seguidores)?'Seguidores':'Seguidos'"></drawer>
+            <drawer :title="(show_seguidores) ? 'Seguidores':'Seguidos'"></drawer>
             <v-card-text>
                     <v-list-item
                     v-for="(user, i) in users"
