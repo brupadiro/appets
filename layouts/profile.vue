@@ -3,6 +3,7 @@
       <v-app-bar
       color="orange"
       class="white--text elevation-0"
+      app="true"
       >
           <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-spacer></v-spacer>
