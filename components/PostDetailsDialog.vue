@@ -1,32 +1,37 @@
 <template>
     <v-dialog scrollable fullscreen persistent v-model="showPostDetailsDialog">
-        <v-card outlined class="elevation-0 ">
-          <v-card-title class="pa-0">
+        <v-card outlined class="elevation-0 fill-width">
+
+          <!-- <v-card-title class="pa-0">
             <v-btn icon @click="$emit('closePostDetailsDialog')">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-          </v-card-title>
-          <v-card-text class="pa-0 blue-grey lighten-5" style="height: 100%;overflow-y:auto">
-            <div class="white pa-1">
-              <v-list-item class="grow pa-0">
-                <v-list-item-avatar v-if="publication.imagen_principal!=null">
-                  <v-img class="elevation-6" contain :src="$axios.defaults.baseURL + imgUserPublicacion"
-                    aspect-ratio="2" round>
-                  </v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>{{publication.user.username}}</v-list-item-title>
-                  <v-list-item-title class="font-weight-light">{{formatDate(publication.created_at)}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-  
-              <span> {{publication.contenido}} </span>
-            </div>
-            <v-img aspect-ratio="2" class="white" contain v-if="publication.imagen_principal!=null"
+          </v-card-title> -->
+          <drawer title="Detalle del video" :app="false"></drawer>
+          <v-card-text class="pa-0 " style="height: 100%;overflow-y:auto">
+            <div class="elevation-1">
+              <v-img aspect-ratio="2" class="white" contain v-if="publication.imagen_principal!=null"
               :src="$axios.defaults.baseURL + publication.imagen_principal.url">
-            </v-img>
-            <v-divider color="#eceff1" height="1"></v-divider>
-          <v-row class="d-flex justify-space-between pa-3">
+              </v-img>
+              <div class="d-flex justify-space-between align-center white pa-4  ">
+                <v-list-item class="pa-0">
+                  <v-list-item-avatar v-if="publication.imagen_principal!=null">
+                    <v-img class="elevation-6" contain :src="$axios.defaults.baseURL + imgUserPublicacion"
+                      aspect-ratio="2" round>
+                    </v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>{{publication.user.username}}</v-list-item-title>
+                    <v-list-item-title class="font-weight-light">76k visitas</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+    
+                <!-- <span> {{publication.contenido}} </span> -->
+                <v-btn color="red" outlined rounded small>Suscribete</v-btn>
+              </div>
+            </div>
+            
+            <!-- <v-row no-gutters class="d-flex justify-space-between pa-3">
               <v-btn text small class="font-weight-regular" @click="changeLike">
                 {{publication.likes.length}}
                 <v-icon class="pl-4" dark left v-if="!like">mdi-thumb-up-outline</v-icon>
@@ -36,10 +41,14 @@
               <v-btn text small class="font-weight-regular">
                 <v-icon dark left>mdi-share-outline</v-icon>
               </v-btn>
-            </v-row>
-            <v-list three-line color="blue-grey lighten-5 pt-0">
+            </v-row> -->
 
-                <div class="text-center" v-show="">
+            <div class="pl-4 pt-4">
+              <h3 class="font-weight-thin">Comentarios</h3>
+            </div>
+            <v-list three-line>
+
+                <div class="text-center mt-2 " v-show="loadingComments">
                     <v-progress-circular
                     :width="3"
                     color="green"
@@ -53,12 +62,16 @@
                     <v-img :src="$axios.defaults.baseURL + comentario.user.profile_picture.url"></v-img>
                   </v-list-item-avatar>
   
-                  <v-list-item-content>
+                  <v-list-item-content three-line>
                     <v-list-item-title v-html="comentario.user.username"></v-list-item-title>
-                    <v-list-item-subtitle v-html="comentario.contenido"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-html="comentario.contenido" class="wrap-text"></v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      <span class="mr-2">324 Me gusta</span>
+                      <span>432 Compartido</span>
+                    </v-list-item-subtitle>
+
                   </v-list-item-content>
                 </v-list-item>
-                <v-divider></v-divider>
               </template>
 <div class="text-center pa-5" v-show="theres_more_comments">
     <v-btn color="primary" fab outlined @click="getMoreComments">
@@ -68,14 +81,14 @@
 </v-list>
 </v-card-text>
 <v-divider color="#cecece" height="1"></v-divider>
-<v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
+<!-- <v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
     <v-input hide-details class="d-flex justify-space-between">
         <v-text-field placeholder="Tu comentario..." outlined dense rounded hide-details v-model="comentario.contenido" background-color="white"></v-text-field>
         <v-btn icon class="font-weight-light overline" color="primary" @click="addComment()">
             <v-icon>mdi-send</v-icon>
         </v-btn>
     </v-input>
-</v-card-actions>
+</v-card-actions> -->
 
 </v-card>
 </v-dialog>
@@ -83,7 +96,7 @@
 
 <script>
     import moment from 'moment'
-
+    import Drawer from './Drawer.vue'
     export default {
         props: {
             showPostDetailsDialog: false,
@@ -167,7 +180,16 @@
 
             }
 
+        },
+        components: {
+            Drawer
         }
 
     }
 </script>
+
+<style>
+    .wrap-text {
+        -webkit-line-clamp: unset !important;
+    }
+</style>

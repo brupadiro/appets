@@ -1,32 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-
-
 .v-application {
-  font-family: 'Montserrat' !important;
+    font-family: 'Montserrat' !important;
 }
 
 .container-disconected {
-  background: url(/background-registro.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    background: url(/background-registro.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .fill-height {
-  height: 100vh !important;
+    height: 100vh !important;
+}
+
+.fill-width {
+    width: 100vw !important;
 }
 
 .container-disconected fieldset {
-  border-color: white !important;
+    border-color: white !important;
 }
 
 .container-disconected label {
-  color: white !important;
+    color: white !important;
 }
 
 .container-disconected input {
     color: white !important;
-  }
-.primary{
-      background: linear-gradient(#00b8ad,#059d94)!important;
+}
+
+.primary {
+    background: linear-gradient(#00b8ad, #059d94)!important;
 }

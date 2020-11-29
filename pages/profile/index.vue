@@ -21,15 +21,15 @@
               <br>
               <span>Me gusta</span>
             </v-col>
-            <v-col class="text-center">
+            <v-col class="text-center" @click="showListSeguidores">
               <span>{{seguidores}}</span>
               <br>
               <span>Seguidores</span>
             </v-col>
-            <v-col class="text-center">
+            <v-col class="text-center"  @click="showListSeguidos">
               <span>{{seguidos}}</span>
               <br>
-              <span>Seguidos</span>
+              <span>Siguiendo</span>
             </v-col>
           </v-row>
         </div>
@@ -107,9 +107,13 @@
     </v-snackbar>
     <!-- Info post -->
     <!-- Lista de seguidores -->
-    <list-seguidores-seguidos :showListSeguidoresSeguidos="showListSeguidoresSeguidos" :seguidores="list_seguidores"
-      :seguidos="list_seguidos" @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false"
-      :show_seguidores="show_seguidores">
+    <list-seguidores-seguidos 
+      :showListSeguidoresSeguidos="showListSeguidoresSeguidos" 
+      :seguidores="list_seguidores"
+      :seguidos="list_seguidos" 
+      :show_seguidores="show_seguidores"
+      @unfollow="removeSeguido"
+      @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false">
     </list-seguidores-seguidos>
   </v-container>
 </template>
@@ -159,6 +163,10 @@
             this.getPosts()
         },
         methods: {
+            async removeSeguido(idSeguido) {
+                await this.getSeguidos()
+                this.$forceUpdate()
+            },
             async getPosts() {
                 this.publications = []
                 var url =
