@@ -30,6 +30,12 @@
                 case '/configuraciones':
                     this.title = "Configuraciones"
                     break
+                case '/sugeridos':
+                    this.title = "Amigos sugeridos"
+                    break
+                case '/notificaciones':
+                    this.title = "Notificaciones"
+                    break
                 default:
                     this.title = "Home"
             }

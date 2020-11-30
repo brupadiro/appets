@@ -8,7 +8,7 @@
             </v-btn>
           </v-col>
           <v-col class="col-4 text-center">
-            <v-toolbar-title v-text="'Notifications'" class="overline white--text" />
+            <v-toolbar-title v-text="'Notificaciones'" class="overline white--text" />
           </v-col>
           <v-col class="col-4 d-flex justify-end align-center">
           </v-col>
@@ -27,7 +27,7 @@
     import BottomNavigationBar from "../components/BottomNavigationBar.vue"
 
     export default {
-        name: 'notifications',
+        name: 'notificaciones',
         middleware: "auth",
 
         data() {

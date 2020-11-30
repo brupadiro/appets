@@ -14,7 +14,23 @@
                 <h2 v-if="show_seguidores" >Seguidores</h2>
                 <h2 v-else >Seguidos</h2>
             </v-card-title> -->
-            <drawer :title="(show_seguidores) ? 'Seguidores':'Siguiendo'" :app="false"></drawer>
+            <!-- <drawer :title="(show_seguidores) ? 'Seguidores':'Siguiendo'" :app="false"></drawer> -->
+            <div>
+                <v-app-bar
+                color="orange"
+                >
+
+                    <v-app-bar-nav-icon 
+                    color="white" 
+                    @click.stop="$emit('closeListSeguidoresSeguidos')">
+                        <v-icon>mdi-arrow-left</v-icon>
+                    </v-app-bar-nav-icon>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-title class="white--text" >Detalle de publicacion</v-toolbar-title>
+                    <v-spacer></v-spacer>
+
+                </v-app-bar>
+            </div>
             <v-card-text>
                 <v-row>
                     <template v-for="(user, i) in users" >

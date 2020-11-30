@@ -8,8 +8,7 @@
     import NotificationInfo from "../components/NotificationInfo.vue"
 
     export default {
-        name: 'notifications',
-        layout: 'notifications',
+        name: 'notificaciones',
         components: {
             NotificationInfo
         }

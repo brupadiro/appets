@@ -3,11 +3,21 @@
         <v-card outlined class="elevation-0 fill-width">
 
           <!-- <v-card-title class="pa-0">
-            <v-btn icon @click="$emit('closePostDetailsDialog')">
+            
+          </v-card-title> -->
+          <!-- <drawer title="Detalle del video" :app="false"></drawer> -->
+          <v-app-bar
+          color="orange"
+          >
+
+            <v-btn icon color="white" @click="$emit('closePostDetailsDialog')">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-          </v-card-title> -->
-          <drawer title="Detalle del video" :app="false"></drawer>
+            <v-spacer></v-spacer>
+            <v-toolbar-title class="white--text" >Detalle de publicacion</v-toolbar-title>
+            <v-spacer></v-spacer>
+
+          </v-app-bar>
           <v-card-text class="pa-0 " style="height: 100%;overflow-y:auto">
             <div class="elevation-1">
               <v-img aspect-ratio="2" class="white" contain v-if="publication.imagen_principal!=null"
