@@ -43,7 +43,14 @@
                                   </v-avatar>
                                   <p class="mb-2">{{user.username}}</p>
                                   <span>Maldonado</span>
-                                  <v-btn v-show="!show_seguidores" class="mt-4 mb-4 ml-1 mr-1"  color="white" @click="followUnfollow(user.id_seguidor_seguido)" outlined rounded x-small>Dejar de seguir</v-btn>
+                                  <v-btn 
+                                  v-show="!show_seguidores" 
+                                  class="mt-4 mb-4 ml-1 mr-1"  
+                                  color="white" 
+                                  @click="unfollow(user.id_seguidor_seguido)" 
+                                  outlined 
+                                  rounded 
+                                  x-small>Dejar de seguir</v-btn>
                             </div>
                         </v-col>
                         
@@ -101,7 +108,8 @@
         },
         methods: {
             async unfollow(idSeguidorSeguido) {
-                await this.$axios.delete('/seguidor-seguidos/' + this.idSeguidorSeguido)
+
+                await this.$axios.delete('/seguidor-seguidos/' + idSeguidorSeguido)
                 this.$emit("unfollow", idSeguidorSeguido)
 
             },
