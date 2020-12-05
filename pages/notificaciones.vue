@@ -1,6 +1,6 @@
 <template>
     <v-container class="pa-0">
-        <notification-info v-for="i in 3" :key="i" :visto="i % 3 != 0 ? true : false"></notification-info>
+        <notification-info v-for="i in notificaciones" :notificacion="i" :key="i.id" ></notification-info>
     </v-container>
 </template>
 
@@ -11,6 +11,15 @@
         name: 'notificaciones',
         components: {
             NotificationInfo
+        },
+        data() {
+            return {
+                notificaciones: []
+            }
+        },
+        async created() {
+            var response = await this.$axios("/notificaciones?para=" + this.$auth.user.id)
+            this.notificaciones = response.data
         }
     }
 </script>
