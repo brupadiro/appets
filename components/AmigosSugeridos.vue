@@ -1,35 +1,42 @@
 <template>
     <v-container class="pa-0">
         <v-card flat>
-            <v-row class="pa-4">
-                    <v-col v-for="i in 3" class="col-6" @click="$router.push('/profile')">
+          <div class=" mt-5 full-width text-center" v-if="sugeridos.length == 0">
+            <v-progress-circular
+            indeterminate
+            color="orange"
+          ></v-progress-circular>
+          </div>
+            <v-row v-else class="pa-4">
+                    <v-col 
+                    v-for="(user,index) in sugeridos"
+                    class="col-6" 
+                    :key="index"
+                    @click="$router.push('/profile/'+user.id)">
                         <v-img
                             class="rounded-lg"
-                            src="https://picsum.photos/300/510?random"
+                            :src="$axios.defaults.baseURL + user.profile_picture.url"
                             lazy-src="/1.png"
                         >
-                        <template v-slot:placeholder>
-                            <v-row
-                              class="fill-height ma-0"
-                              align="center"
-                              justify="center"
-                            >
-                              <v-progress-circular
-                                indeterminate
-                                color="grey lighten-5"
-                              ></v-progress-circular>
-                            </v-row>
-                          </template>
-</v-img>
-<span class="pt-1">Federico</span>
-</v-col>
-</v-row>
-</v-card>
-</v-container>
+                        </v-img>
+                        <span class="pt-1">{{user.username}}</span>
+                    </v-col>
+              </v-row>
+          </v-card>
+      </v-container>
 </template>
 
 <script>
     export default {
 
+      data(){
+        return {
+          sugeridos:[]
+        }
+      },
+      async created(){
+        var response  = await this.$axios.get('/seguidor-seguidos/sugeridos?seguidor='+this.$auth.user.id)
+        this.sugeridos = response.data
+      }
     }
 </script>

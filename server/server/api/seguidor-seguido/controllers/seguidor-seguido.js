@@ -10,6 +10,8 @@ module.exports = {
 
     async sugeridos(ctx) {
 
+        // const asyncWait = ms => new Promise(resolve => setTimeout(resolve, ms))
+        // await asyncWait(5000)
         let seguidos = await strapi.services['seguidor-seguido'].find(ctx.query)
         let idUsuariosQueSigo = seguidos.map(seguidos => seguidos.seguido.id)
         idUsuariosQueSigo.push(ctx.query['seguidor'])
