@@ -17,7 +17,7 @@
         <div class="pt-5">
           <v-row  class="orange rounded-lg elevation-1">
             <v-col class="text-center ">
-              <span>231</span>
+              <span>{{allLikes}}</span>
               <br>
               <span>Me gusta</span>
             </v-col>
@@ -134,6 +134,7 @@
                     file: {},
                     url: ""
                 },
+                allLikes: "-",
                 items: {
                     info: {
                         extra: "Extra extraaa"
@@ -159,6 +160,11 @@
             this.getPosts()
         },
         methods: {
+            async getAllLikes() {
+                var url = `/likes?publicacion.user=${this.$auth.user.id}`
+                var response = await this.$axios.get(url)
+                this.allLikes = response.data.length
+            },
             async getPosts() {
                 this.publications = []
                 var url =
