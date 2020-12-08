@@ -162,6 +162,7 @@
             this.getSeguidos()
             this.getSeguidores()
             this.getPosts()
+            this.getAllLikes()
         },
         methods: {
             async getAllLikes() {
@@ -176,7 +177,7 @@
             async getPosts() {
                 this.publications = []
                 var url =
-                    `/publicaciones/?user=${this.user}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
+                    `/publicaciones/?user=${this.$auth.user.id}&_start=${this.start_publicaciones}&_limit=${this.limit_publicaciones}`
                 await this.$axios.get(url)
                     .then((data) => {
                         this.publications = data.data
