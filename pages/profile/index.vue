@@ -4,7 +4,7 @@
     class="relative d-flex flex-column align-center"
     >
       <v-img
-      src="/1.png"
+      :src="$axios.defaults.baseURL + profile.profile_picture.url"
       height="45vh"
       width="100vw"
       >
@@ -12,7 +12,7 @@
 
       <div 
       class="pa-5 first-info-profile white--text mb-n10">
-        <h2>Pascual</h2>
+        <h2>{{profile.username}}</h2>
         <span>Maldonado</span>
         <div class="pt-5">
           <v-row  class="orange rounded-lg elevation-1">
@@ -29,7 +29,7 @@
             <v-col class="text-center"  @click="showListSeguidos">
               <span>{{seguidos}}</span>
               <br>
-              <span>Seguidos</span>
+              <span>Siguiendo</span>
             </v-col>
           </v-row>
         </div>
@@ -107,9 +107,13 @@
     </v-snackbar>
     <!-- Info post -->
     <!-- Lista de seguidores -->
-    <list-seguidores-seguidos :showListSeguidoresSeguidos="showListSeguidoresSeguidos" :seguidores="list_seguidores"
-      :seguidos="list_seguidos" @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false"
-      :show_seguidores="show_seguidores">
+    <list-seguidores-seguidos 
+      :showListSeguidoresSeguidos="showListSeguidoresSeguidos" 
+      :seguidores="list_seguidores"
+      :seguidos="list_seguidos" 
+      :show_seguidores="show_seguidores"
+      @unfollow="removeSeguido"
+      @closeListSeguidoresSeguidos="showListSeguidoresSeguidos = false">
     </list-seguidores-seguidos>
   </v-container>
 </template>
@@ -164,6 +168,10 @@
                 var url = `/likes?publicacion.user=${this.$auth.user.id}`
                 var response = await this.$axios.get(url)
                 this.allLikes = response.data.length
+            },
+            async removeSeguido(idSeguido) {
+                await this.getSeguidos()
+                this.$forceUpdate()
             },
             async getPosts() {
                 this.publications = []

@@ -33,3 +33,11 @@
 .primary {
     background: linear-gradient(#00b8ad, #059d94)!important;
 }
+
+.absolute {
+    position: absolute !important;
+}
+
+.relative {
+    position: relative !important;
+}

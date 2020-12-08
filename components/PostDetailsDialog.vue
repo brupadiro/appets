@@ -3,13 +3,23 @@
         <v-card outlined class="elevation-0 fill-width">
 
           <!-- <v-card-title class="pa-0">
-            <v-btn icon @click="$emit('closePostDetailsDialog')">
+            
+          </v-card-title> -->
+          <!-- <drawer title="Detalle del video" :app="false"></drawer> -->
+          <v-app-bar
+          color="orange"
+          >
+
+            <v-btn icon color="white" @click="$emit('closePostDetailsDialog')">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-          </v-card-title> -->
-          <drawer title="Detalle del video"></drawer>
+            <v-spacer></v-spacer>
+            <v-toolbar-title class="white--text" >Detalle de publicacion</v-toolbar-title>
+            <v-spacer></v-spacer>
+
+          </v-app-bar>
           <v-card-text class="pa-0 " style="height: 100%;overflow-y:auto">
-            <div class="elevation-2">
+            <div class="elevation-1">
               <v-img aspect-ratio="2" class="white" contain v-if="publication.imagen_principal!=null"
               :src="$axios.defaults.baseURL + publication.imagen_principal.url">
               </v-img>
@@ -27,7 +37,7 @@
                 </v-list-item>
     
                 <!-- <span> {{publication.contenido}} </span> -->
-                <v-btn color="red" outlined rounded>Suscribete</v-btn>
+                <v-btn color="red" outlined rounded small>Suscribete</v-btn>
               </div>
             </div>
             
@@ -43,8 +53,8 @@
               </v-btn>
             </v-row> -->
 
-            <div class="pa-4">
-              <h1 class="font-weight-thin">Comentarios</h1>
+            <div class="pl-4 pt-4">
+              <h3 class="font-weight-thin">Comentarios</h3>
             </div>
             <v-list three-line>
 
@@ -64,7 +74,7 @@
   
                   <v-list-item-content three-line>
                     <v-list-item-title v-html="comentario.user.username"></v-list-item-title>
-                    <v-list-item-subtitle v-html="comentario.contenido"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-html="comentario.contenido" class="wrap-text"></v-list-item-subtitle>
                     <v-list-item-subtitle>
                       <span class="mr-2">324 Me gusta</span>
                       <span>432 Compartido</span>
@@ -81,14 +91,14 @@
 </v-list>
 </v-card-text>
 <v-divider color="#cecece" height="1"></v-divider>
-<v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
+<!-- <v-card-actions class="pl-6 pr-6 blue-grey lighten-5">
     <v-input hide-details class="d-flex justify-space-between">
         <v-text-field placeholder="Tu comentario..." outlined dense rounded hide-details v-model="comentario.contenido" background-color="white"></v-text-field>
         <v-btn icon class="font-weight-light overline" color="primary" @click="addComment()">
             <v-icon>mdi-send</v-icon>
         </v-btn>
     </v-input>
-</v-card-actions>
+</v-card-actions> -->
 
 </v-card>
 </v-dialog>
@@ -187,3 +197,9 @@
 
     }
 </script>
+
+<style>
+    .wrap-text {
+        -webkit-line-clamp: unset !important;
+    }
+</style>

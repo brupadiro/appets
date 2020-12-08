@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <drawer title="Home"></drawer>
+        <drawer :title="title"></drawer>
       <v-content class="white">
         <nuxt />
       </v-content>
@@ -21,6 +21,23 @@
         data() {
             return {
                 addPublication: false,
+                title: "Home"
+            }
+        },
+        created() {
+            var route = this.$route.path
+            switch (route) {
+                case '/configuraciones':
+                    this.title = "Configuraciones"
+                    break
+                case '/sugeridos':
+                    this.title = "Amigos sugeridos"
+                    break
+                case '/notificaciones':
+                    this.title = "Notificaciones"
+                    break
+                default:
+                    this.title = "Home"
             }
         },
     }

@@ -4,7 +4,7 @@
     class="relative d-flex flex-column align-center"
     >
       <v-img
-      src="/1.png"
+      :src="$axios.defaults.baseURL + profile.profile_picture.url"
       height="45vh"
       width="100vw"
       >
@@ -12,8 +12,8 @@
 
       <div 
       class="pa-5 first-info-profile white--text mb-n10">
-        <h2>Pascual</h2>
-        <span>Maldonado</span>
+      <h2>{{profile.username}}</h2>
+      <span>Maldonado</span>
         <div class="pt-5">
           <v-row  class="orange rounded-lg elevation-1">
             <v-col class="text-center ">

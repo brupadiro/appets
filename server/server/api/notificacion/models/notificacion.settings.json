@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notificacions",
+  "info": {
+    "name": "Notificacion"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "mensaje": {
+      "type": "string"
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "suscripcion",
+        "like"
+      ]
+    },
+    "de": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "para": {
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}
